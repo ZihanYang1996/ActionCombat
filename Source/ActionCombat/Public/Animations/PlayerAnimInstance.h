@@ -13,5 +13,11 @@ UCLASS()
 class ACTIONCOMBAT_API UPlayerAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentVelocity{0.0f};
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateVelocity();
 };
