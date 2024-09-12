@@ -19,6 +19,7 @@ void ULockonComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 	// ...
 	
 }
@@ -31,4 +32,10 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	// ...
 }
+
+void ULockonComponent::ToggleLockon()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Lockon Started!"));
+}
+
 
