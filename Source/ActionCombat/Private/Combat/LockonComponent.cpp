@@ -3,6 +3,9 @@
 
 #include "Combat/LockonComponent.h"
 
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 // Sets default values for this component's properties
 ULockonComponent::ULockonComponent()
 {
@@ -19,8 +22,14 @@ void ULockonComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
-	// ...
+	PlayerController = GetWorld()->GetFirstPlayerController();
+	// Some alternative ways to get the player controller
+	// PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	// PlayerController = Cast<APlayerController>(OwnerCharacter->GetController());
+
+	CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();
 }
 
 
@@ -39,15 +48,21 @@ void ULockonComponent::ToggleLockon()
 	{
 		bIsLockedOn = false;
 		UE_LOG(LogTemp, Warning, TEXT("Lockon Disabled"));
+
+		// Undo the Lockon
+		PlayerController->SetIgnoreLookInput(false);
+		CharacterMovementComponent->bOrientRotationToMovement = true;
+		CharacterMovementComponent->bUseControllerDesiredRotation = false;
+		
 		return;
 	}
 
 	FHitResult HitResult;
-	FVector CurrentLocation{GetOwner()->GetActorLocation()};
+	FVector CurrentLocation{OwnerCharacter->GetActorLocation()};
 	// Only need the location of the actor, as we use a sphere for the collision shape, and the radius is the range of detection
 	FCollisionShape Sphere{FCollisionShape::MakeSphere(Radius)};
 	FCollisionQueryParams CollisionParameters;
-	CollisionParameters.AddIgnoredActor(GetOwner()); // Ignore the owner of the component
+	CollisionParameters.AddIgnoredActor(OwnerCharacter); // Ignore the owner of the component
 
 #if 0
 	// Alternative way to ignore the owner of the component
@@ -55,7 +70,7 @@ void ULockonComponent::ToggleLockon()
 	{
 		FName{TEXT("Ignore Collision Params")}, // Trace tag
 		false, // bTraceComplex
-		GetOwner() // Ignore actor
+		OwnerCharacter // Ignore actor
 	};
 #endif
 
@@ -78,5 +93,11 @@ void ULockonComponent::ToggleLockon()
 
 	bIsLockedOn = true;
 	DrawDebugSphere(GetWorld(), CurrentLocation, Radius, 24, FColor::Green, false, 2.0f);
-	UE_LOG(LogTemp, Warning, TEXT("Actor Detected: %s"), *HitResult.GetActor()->GetName());
+
+	// Prevent the player from looking around
+	PlayerController->SetIgnoreLookInput(true);
+	// Prevent the character from rotating towards the movement direction
+	CharacterMovementComponent->bOrientRotationToMovement = false;
+	// Make the character rotate towards the controller's desired rotation
+	CharacterMovementComponent->bUseControllerDesiredRotation = true;
 }

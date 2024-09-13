@@ -7,6 +7,8 @@
 #include "LockonComponent.generated.h"
 
 
+class UCharacterMovementComponent;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API ULockonComponent : public UActorComponent
 {
@@ -33,4 +35,10 @@ public:
 
 private:
 	bool bIsLockedOn = false;
+
+	ACharacter* OwnerCharacter;
+
+	APlayerController* PlayerController;
+
+	UCharacterMovementComponent* CharacterMovementComponent;
 };
