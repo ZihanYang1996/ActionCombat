@@ -19,14 +19,14 @@ void ULockonComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+
 	// ...
-	
 }
 
 
 // Called every frame
-void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                     FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -35,7 +35,48 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void ULockonComponent::ToggleLockon()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Lockon Started!"));
+	if (bIsLockedOn)
+	{
+		bIsLockedOn = false;
+		UE_LOG(LogTemp, Warning, TEXT("Lockon Disabled"));
+		return;
+	}
+
+	FHitResult HitResult;
+	FVector CurrentLocation{GetOwner()->GetActorLocation()};
+	// Only need the location of the actor, as we use a sphere for the collision shape, and the radius is the range of detection
+	FCollisionShape Sphere{FCollisionShape::MakeSphere(Radius)};
+	FCollisionQueryParams CollisionParameters;
+	CollisionParameters.AddIgnoredActor(GetOwner()); // Ignore the owner of the component
+
+#if 0
+	// Alternative way to ignore the owner of the component
+	FCollisionQueryParams CollisionParams
+	{
+		FName{TEXT("Ignore Collision Params")}, // Trace tag
+		false, // bTraceComplex
+		GetOwner() // Ignore actor
+	};
+#endif
+
+
+	bool bHasFoundTarget{
+		GetWorld()->SweepSingleByChannel(
+			HitResult,
+			CurrentLocation,
+			CurrentLocation,
+			FQuat::Identity,
+			ECollisionChannel::ECC_GameTraceChannel1,
+			Sphere,
+			CollisionParameters)
+	};
+
+	if (!bHasFoundTarget)
+	{
+		return;
+	}
+
+	bIsLockedOn = true;
+	DrawDebugSphere(GetWorld(), CurrentLocation, Radius, 24, FColor::Green, false, 2.0f);
+	UE_LOG(LogTemp, Warning, TEXT("Actor Detected: %s"), *HitResult.GetActor()->GetName());
 }
-
-
