@@ -34,7 +34,6 @@ void ULockonComponent::BeginPlay()
 	CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();
 
 	SpringArmComponent = OwnerCharacter->FindComponentByClass<USpringArmComponent>();
-	SpringArmComponent->TargetOffset = FVector{0.0f, 0.0f, 100.0f};
 }
 
 
@@ -50,7 +49,7 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		FVector EndLocation{CurrentTargetActor->GetActorLocation()};
 		EndLocation.Z -= 150.0f; // Make the rotation looks downwards a bit
 		// FindLookAtRotation uses FRotationMatrix::MakeFromX(X).Rotator() internally
-		FRotator LookAtRotation{UKismetMathLibrary::FindLookAtRotation(StartLocation,EndLocation)};
+		FRotator LookAtRotation{UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation)};
 
 		PlayerController->SetControlRotation(LookAtRotation);
 	}
@@ -60,20 +59,28 @@ void ULockonComponent::ToggleLockon()
 {
 	if (bIsLockedOn)
 	{
+		// If the lockon is currently enabled, disable it
 		bIsLockedOn = false;
 		UE_LOG(LogTemp, Warning, TEXT("Lockon Disabled"));
 
 		// Undo the Lockon
-		PlayerController->SetIgnoreLookInput(false);
+		// Not using SetIgnoreLookInput(false) because camera can be locked multiple times 
+		PlayerController->ResetIgnoreLookInput();
 		CharacterMovementComponent->bOrientRotationToMovement = true;
 		CharacterMovementComponent->bUseControllerDesiredRotation = false;
 
 		// Clear the target actor
 		CurrentTargetActor = nullptr;
 
+		// Undo the spring arm's target offset
+		SpringArmComponent->TargetOffset = FVector::ZeroVector;
+
 		return;
 	}
 
+	// If the lockon is currently disabled, enable it
+
+	// Perform a sphere trace to find the target
 	FHitResult HitResult;
 	FVector CurrentLocation{OwnerCharacter->GetActorLocation()};
 	// Only need the location of the actor, as we use a sphere for the collision shape, and the radius is the range of detection
@@ -119,4 +126,6 @@ void ULockonComponent::ToggleLockon()
 	CharacterMovementComponent->bOrientRotationToMovement = false;
 	// Make the character rotate towards the controller's desired rotation
 	CharacterMovementComponent->bUseControllerDesiredRotation = true;
+	// Adjust the spring arm's target offset to raise the camera a bit
+	SpringArmComponent->TargetOffset = FVector{0.0f, 0.0f, 100.0f};
 }
