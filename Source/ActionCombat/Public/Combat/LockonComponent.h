@@ -32,12 +32,15 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Radius = 1000.0f;
+	float Radius{1000.0f};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	double BreakDistance{2000.0f};
 
 	AActor* CurrentTargetActor;
 
 private:
-	bool bIsLockedOn = false;
+	bool bIsLockedOn{false};
 
 	ACharacter* OwnerCharacter;
 
@@ -46,4 +49,8 @@ private:
 	UCharacterMovementComponent* CharacterMovementComponent;
 
 	USpringArmComponent* SpringArmComponent;
+
+	void StartLockon(FHitResult HitResult);
+
+	void EndLockon();
 };

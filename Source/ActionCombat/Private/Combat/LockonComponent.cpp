@@ -47,6 +47,15 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		FVector StartLocation{OwnerCharacter->GetActorLocation()};
 		FVector EndLocation{CurrentTargetActor->GetActorLocation()};
+
+		// Check if the target is out of range
+		double Distance{FVector::Distance(StartLocation, EndLocation)};
+		if (Distance > BreakDistance)
+		{
+			EndLockon();
+			return;
+		}
+
 		EndLocation.Z -= 150.0f; // Make the rotation looks downwards a bit
 		// FindLookAtRotation uses FRotationMatrix::MakeFromX(X).Rotator() internally
 		FRotator LookAtRotation{UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation)};
@@ -55,26 +64,13 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	}
 }
 
+
 void ULockonComponent::ToggleLockon()
 {
 	if (bIsLockedOn)
 	{
 		// If the lockon is currently enabled, disable it
-		bIsLockedOn = false;
-		UE_LOG(LogTemp, Warning, TEXT("Lockon Disabled"));
-
-		// Undo the Lockon
-		// Not using SetIgnoreLookInput(false) because camera can be locked multiple times 
-		PlayerController->ResetIgnoreLookInput();
-		CharacterMovementComponent->bOrientRotationToMovement = true;
-		CharacterMovementComponent->bUseControllerDesiredRotation = false;
-
-		// Clear the target actor
-		CurrentTargetActor = nullptr;
-
-		// Undo the spring arm's target offset
-		SpringArmComponent->TargetOffset = FVector::ZeroVector;
-
+		EndLockon();
 		return;
 	}
 
@@ -115,9 +111,15 @@ void ULockonComponent::ToggleLockon()
 		return;
 	}
 
-	bIsLockedOn = true;
 	DrawDebugSphere(GetWorld(), CurrentLocation, Radius, 24, FColor::Green, false, 2.0f);
 
+	StartLockon(HitResult);
+}
+
+
+void ULockonComponent::StartLockon(FHitResult HitResult)
+{
+	bIsLockedOn = true;
 	// Get the actor that was hit
 	CurrentTargetActor = HitResult.GetActor();
 	// Prevent the player from looking around
@@ -128,4 +130,23 @@ void ULockonComponent::ToggleLockon()
 	CharacterMovementComponent->bUseControllerDesiredRotation = true;
 	// Adjust the spring arm's target offset to raise the camera a bit
 	SpringArmComponent->TargetOffset = FVector{0.0f, 0.0f, 100.0f};
+}
+
+
+void ULockonComponent::EndLockon()
+{
+	bIsLockedOn = false;
+	UE_LOG(LogTemp, Warning, TEXT("Lockon Disabled"));
+
+	// Undo the Lockon
+	// Not using SetIgnoreLookInput(false) because camera can be locked multiple times 
+	PlayerController->ResetIgnoreLookInput();
+	CharacterMovementComponent->bOrientRotationToMovement = true;
+	CharacterMovementComponent->bUseControllerDesiredRotation = false;
+
+	// Clear the target actor
+	CurrentTargetActor = nullptr;
+
+	// Undo the spring arm's target offset
+	SpringArmComponent->TargetOffset = FVector::ZeroVector;
 }
