@@ -5,6 +5,7 @@
 
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
@@ -31,6 +32,9 @@ void ULockonComponent::BeginPlay()
 	// PlayerController = Cast<APlayerController>(OwnerCharacter->GetController());
 
 	CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();
+
+	SpringArmComponent = OwnerCharacter->FindComponentByClass<USpringArmComponent>();
+	SpringArmComponent->TargetOffset = FVector{0.0f, 0.0f, 100.0f};
 }
 
 
@@ -42,12 +46,12 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	if (bIsLockedOn && IsValid(CurrentTargetActor))
 	{
+		FVector StartLocation{OwnerCharacter->GetActorLocation()};
+		FVector EndLocation{CurrentTargetActor->GetActorLocation()};
+		EndLocation.Z -= 150.0f; // Make the rotation looks downwards a bit
 		// FindLookAtRotation uses FRotationMatrix::MakeFromX(X).Rotator() internally
-		FRotator LookAtRotation{
-			UKismetMathLibrary::FindLookAtRotation(
-				OwnerCharacter->GetActorLocation(),
-				CurrentTargetActor->GetActorLocation())
-		};
+		FRotator LookAtRotation{UKismetMathLibrary::FindLookAtRotation(StartLocation,EndLocation)};
+
 		PlayerController->SetControlRotation(LookAtRotation);
 	}
 }

@@ -7,6 +7,7 @@
 #include "LockonComponent.generated.h"
 
 
+class USpringArmComponent;
 class UCharacterMovementComponent;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
@@ -43,4 +44,6 @@ private:
 	APlayerController* PlayerController;
 
 	UCharacterMovementComponent* CharacterMovementComponent;
+
+	USpringArmComponent* SpringArmComponent;
 };
