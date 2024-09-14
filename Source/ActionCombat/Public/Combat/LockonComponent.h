@@ -33,6 +33,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Radius = 1000.0f;
 
+	AActor* CurrentTargetActor;
+
 private:
 	bool bIsLockedOn = false;
 

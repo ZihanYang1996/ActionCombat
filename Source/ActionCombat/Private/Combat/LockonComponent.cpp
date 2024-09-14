@@ -5,6 +5,7 @@
 
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
 ULockonComponent::ULockonComponent()
@@ -39,7 +40,16 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (bIsLockedOn && IsValid(CurrentTargetActor))
+	{
+		// FindLookAtRotation uses FRotationMatrix::MakeFromX(X).Rotator() internally
+		FRotator LookAtRotation{
+			UKismetMathLibrary::FindLookAtRotation(
+				OwnerCharacter->GetActorLocation(),
+				CurrentTargetActor->GetActorLocation())
+		};
+		PlayerController->SetControlRotation(LookAtRotation);
+	}
 }
 
 void ULockonComponent::ToggleLockon()
@@ -53,7 +63,10 @@ void ULockonComponent::ToggleLockon()
 		PlayerController->SetIgnoreLookInput(false);
 		CharacterMovementComponent->bOrientRotationToMovement = true;
 		CharacterMovementComponent->bUseControllerDesiredRotation = false;
-		
+
+		// Clear the target actor
+		CurrentTargetActor = nullptr;
+
 		return;
 	}
 
@@ -94,6 +107,8 @@ void ULockonComponent::ToggleLockon()
 	bIsLockedOn = true;
 	DrawDebugSphere(GetWorld(), CurrentLocation, Radius, 24, FColor::Green, false, 2.0f);
 
+	// Get the actor that was hit
+	CurrentTargetActor = HitResult.GetActor();
 	// Prevent the player from looking around
 	PlayerController->SetIgnoreLookInput(true);
 	// Prevent the character from rotating towards the movement direction
