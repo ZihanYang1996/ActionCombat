@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Interfaces/Enemy.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values for this component's properties
@@ -106,10 +107,18 @@ void ULockonComponent::ToggleLockon()
 			CollisionParameters)
 	};
 
-	if (!bHasFoundTarget)
+	// If the trace didn't hit anything, return
+	if (!bHasFoundTarget || !HitResult.GetActor()->Implements<UEnemy>())
 	{
 		return;
 	}
+
+	// If the actor that was hit doesn't implement the UEnemy interface, return
+	if (!HitResult.GetActor()->Implements<UEnemy>())
+	{
+		return;
+	}
+
 
 	DrawDebugSphere(GetWorld(), CurrentLocation, Radius, 24, FColor::Green, false, 2.0f);
 
@@ -130,6 +139,8 @@ void ULockonComponent::StartLockon(FHitResult HitResult)
 	CharacterMovementComponent->bUseControllerDesiredRotation = true;
 	// Adjust the spring arm's target offset to raise the camera a bit
 	SpringArmComponent->TargetOffset = FVector{0.0f, 0.0f, 100.0f};
+	// Call the OnSelected function of the enemy
+	IEnemy::Execute_OnSelected(CurrentTargetActor);
 }
 
 
@@ -144,9 +155,14 @@ void ULockonComponent::EndLockon()
 	CharacterMovementComponent->bOrientRotationToMovement = true;
 	CharacterMovementComponent->bUseControllerDesiredRotation = false;
 
+	// Call the OnDeselected function of the enemy
+	IEnemy::Execute_OnDeselected(CurrentTargetActor);
+	
 	// Clear the target actor
 	CurrentTargetActor = nullptr;
 
 	// Undo the spring arm's target offset
 	SpringArmComponent->TargetOffset = FVector::ZeroVector;
+
+	
 }
