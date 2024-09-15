@@ -9,6 +9,10 @@
 
 class USpringArmComponent;
 class UCharacterMovementComponent;
+// class ULockonComponent;  // Seems to be unnecessary
+
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnUpdatedTargetSignature, ULockonComponent, OnUpdatedTargetDelegate,
+                                                   AActor*, NewTargetActorRef);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API ULockonComponent : public UActorComponent
@@ -38,6 +42,9 @@ public:
 	double BreakDistance{2000.0f};
 
 	AActor* CurrentTargetActor;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnUpdatedTargetSignature OnUpdatedTargetDelegate;
 
 private:
 	bool bIsLockedOn{false};

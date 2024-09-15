@@ -141,6 +141,8 @@ void ULockonComponent::StartLockon(FHitResult HitResult)
 	SpringArmComponent->TargetOffset = FVector{0.0f, 0.0f, 100.0f};
 	// Call the OnSelected function of the enemy
 	IEnemy::Execute_OnSelected(CurrentTargetActor);
+	// Broadcast the event that the target has been updated
+	OnUpdatedTargetDelegate.Broadcast(CurrentTargetActor);
 }
 
 
@@ -157,12 +159,13 @@ void ULockonComponent::EndLockon()
 
 	// Call the OnDeselected function of the enemy
 	IEnemy::Execute_OnDeselected(CurrentTargetActor);
-	
+
 	// Clear the target actor
 	CurrentTargetActor = nullptr;
 
 	// Undo the spring arm's target offset
 	SpringArmComponent->TargetOffset = FVector::ZeroVector;
 
-	
+	// Broadcast the event that the target has been updated
+	OnUpdatedTargetDelegate.Broadcast(CurrentTargetActor);
 }
