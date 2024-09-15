@@ -18,6 +18,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float CurrentVelocity{0.0f};
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CurrentDirection{0.0f};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsInCombat{false};
+
 	UFUNCTION(BlueprintCallable)
 	void UpdateVelocity();
 };
