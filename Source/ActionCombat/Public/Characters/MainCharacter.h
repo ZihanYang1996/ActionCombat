@@ -7,6 +7,8 @@
 #include "Interfaces/MainPlayer.h"
 #include "MainCharacter.generated.h"
 
+class UPlayerAnimInstance;
+
 UCLASS()
 class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer
 {
@@ -19,6 +21,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(BlueprintReadOnly)
+	UPlayerAnimInstance* PlayerAnimInstance;
 
 public:
 	// Called every frame
