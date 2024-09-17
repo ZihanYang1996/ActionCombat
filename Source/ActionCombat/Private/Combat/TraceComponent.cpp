@@ -19,8 +19,7 @@ void UTraceComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	SkeletalMeshComponent = GetOwner()->GetComponentByClass<USkeletalMeshComponent>();
 }
 
 
@@ -29,6 +28,49 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
-}
+	FVector StartSocketLocation{SkeletalMeshComponent->GetSocketLocation(StartSocket)};
 
+	FVector EndSocketLocation{SkeletalMeshComponent->GetSocketLocation(EndSocket)};
+
+	FQuat ShapeRotation{SkeletalMeshComponent->GetSocketQuaternion(Rotation)};
+
+	FVector WeaponCenter{(StartSocketLocation + EndSocketLocation) / 2.0f};
+
+	TArray<FHitResult> OutResults;
+
+	double WeaponLength{FVector::Distance(StartSocketLocation, EndSocketLocation)};
+
+	FVector BoxHalfExtent{BoxCollisionEdgeLength, BoxCollisionEdgeLength, WeaponLength};
+	BoxHalfExtent /= 2.0f;
+
+	FCollisionShape Box{FCollisionShape::MakeBox(BoxHalfExtent)};
+
+	FCollisionQueryParams CollisionParams{
+		FName{TEXT("Ignore Collision Params")},
+		false,
+		GetOwner()
+	};
+
+	bool bHasFoundTargets{
+		GetWorld()->SweepMultiByChannel(
+			OutResults,
+			WeaponCenter,
+			WeaponCenter,
+			ShapeRotation,
+			ECollisionChannel::ECC_GameTraceChannel1,
+			Box,
+			CollisionParams
+		)
+	};
+
+	if (bIsInDebugMode)
+	{
+		DrawDebugBox(GetWorld(),
+		             WeaponCenter,
+		             Box.GetExtent(),
+		             ShapeRotation,
+		             bHasFoundTargets ? FColor::Green : FColor::Red,
+		             false,
+		             1.0f);
+	}
+}

@@ -12,6 +12,22 @@ class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	USkeletalMeshComponent* SkeletalMeshComponent;
+
+	UPROPERTY(EditAnywhere)
+	FName StartSocket;
+
+	UPROPERTY(EditAnywhere)
+	FName EndSocket;
+
+	UPROPERTY(EditAnywhere)
+	FName Rotation;
+
+	UPROPERTY(EditAnywhere)
+	double BoxCollisionEdgeLength{30.0f};
+
+	UPROPERTY(EditAnywhere)
+	bool bIsInDebugMode{false};
 public:	
 	// Sets default values for this component's properties
 	UTraceComponent();
