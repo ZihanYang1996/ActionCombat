@@ -3,6 +3,8 @@
 
 #include "Combat/TraceComponent.h"
 
+#include "Interfaces/Fighter.h"
+
 // Sets default values for this component's properties
 UTraceComponent::UTraceComponent()
 {
@@ -73,4 +75,19 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		             false,
 		             1.0f);
 	}
+
+	// Check if we have found any targets
+	if (OutResults.Num() == 0)
+	{
+		return;
+	}
+
+	// Calculate the damage
+	float CharacterDamage{0.0f};
+	IFighter* Fighter{Cast<IFighter>(GetOwner())};
+	if (Fighter)
+	{
+		CharacterDamage = Fighter->GetDamage();
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Character damage: %f"), CharacterDamage);
 }
