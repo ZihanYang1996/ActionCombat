@@ -27,7 +27,8 @@ void UCombatComponent::BeginPlay()
 
 
 // Called every frame
-void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                     FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -36,10 +37,39 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UCombatComponent::CombatAttack()
 {
-	OwnerCharacter->PlayAnimMontage(AttackMontages[NextAttackMontageIndex]);
-
-	// Increment the index and wrap around
-	NextAttackMontageIndex = (NextAttackMontageIndex + 1) % MaxAttackMontageIndex;
+	// Check if the player is attacking, no input will be accepted if the player is attacking
+	if (bIsAttacking)
+	{
+		return;
+	}
 	
+	// Check if we can continue the combo
+	if (bCanContinueCombo)
+	{
+		CurrentAttackMontageIndex = (CurrentAttackMontageIndex + 1) % MaxAttackMontageIndex;
+	}
+	else
+	{
+		CurrentAttackMontageIndex = 0;
+	}
+
+	// Set the attacking flag to true, to prevent the player from attacking again
+	bIsAttacking = true;
+
+	// Play the attack montage
+	OwnerCharacter->PlayAnimMontage(AttackMontages[CurrentAttackMontageIndex]);
 }
 
+void UCombatComponent::EnableComboContinuation()
+{
+	// Allow the player to continue the combo
+	bIsAttacking = false;
+	bCanContinueCombo = true;
+}
+
+void UCombatComponent::ResetCombo()
+{
+	// Reset the combo
+	bCanContinueCombo = false;
+	// CurrentAttackMontageIndex = 0;
+}

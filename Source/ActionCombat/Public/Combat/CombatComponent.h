@@ -7,7 +7,7 @@
 #include "CombatComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -18,23 +18,34 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 	ACharacter* OwnerCharacter;
 
 	UPROPERTY(VisibleAnywhere)
-	int NextAttackMontageIndex{0};
+	int CurrentAttackMontageIndex{0};
 
 	int MaxAttackMontageIndex;
 
-public:	
+	bool bCanContinueCombo{false};
+
+	bool bIsAttacking{false};
+	
+	UPROPERTY(EditAnywhere)
+	float ComboWindowTime{0.5f};
+
+public:
 	// Sets default values for this component's properties
 	UCombatComponent();
+
+	void EnableComboContinuation();
+
+	void ResetCombo();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
 	void CombatAttack();
-		
 };
