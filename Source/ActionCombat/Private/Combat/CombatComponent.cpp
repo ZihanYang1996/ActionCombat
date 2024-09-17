@@ -3,6 +3,8 @@
 
 #include "Combat/CombatComponent.h"
 
+#include "GameFramework/Character.h"
+
 // Sets default values for this component's properties
 UCombatComponent::UCombatComponent()
 {
@@ -19,8 +21,8 @@ void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
+	MaxAttackMontageIndex = AttackMontages.Num();
 }
 
 
@@ -30,5 +32,14 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UCombatComponent::CombatAttack()
+{
+	OwnerCharacter->PlayAnimMontage(AttackMontages[NextAttackMontageIndex]);
+
+	// Increment the index and wrap around
+	NextAttackMontageIndex = (NextAttackMontageIndex + 1) % MaxAttackMontageIndex;
+	
 }
 

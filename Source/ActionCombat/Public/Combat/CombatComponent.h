@@ -12,6 +12,16 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere)
+	TArray<UAnimMontage*> AttackMontages;
+
+	ACharacter* OwnerCharacter;
+
+	UPROPERTY(VisibleAnywhere)
+	int NextAttackMontageIndex{0};
+
+	int MaxAttackMontageIndex;
+
 public:	
 	// Sets default values for this component's properties
 	UCombatComponent();
@@ -24,5 +34,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UFUNCTION(BlueprintCallable)
+	void CombatAttack();
 		
 };
