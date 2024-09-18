@@ -28,4 +28,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// virtual void OnSelected_Implementation() override;
+
+	UFUNCTION()
+	void DamageReceidved(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+									 AController* InstigatedBy, AActor* DamageCauser);
 };

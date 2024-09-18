@@ -14,6 +14,7 @@ ABossCharacter::ABossCharacter()
 void ABossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	OnTakeAnyDamage.AddDynamic(this, &ABossCharacter::DamageReceidved);
 }
 
 // Called every frame
@@ -33,3 +34,9 @@ void ABossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 // 	// Do something when the boss is selected
 // 	UE_LOG(LogTemp, Warning, TEXT("Blueprint implementation is forgotten!"));
 // }
+
+void ABossCharacter::DamageReceidved(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+                                     AController* InstigatedBy, AActor* DamageCauser)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Boss received %f damage!"), Damage);
+}

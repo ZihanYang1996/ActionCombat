@@ -3,7 +3,9 @@
 
 #include "Combat/TraceComponent.h"
 
+#include "Engine/DamageEvents.h"
 #include "Interfaces/Fighter.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UTraceComponent::UTraceComponent()
@@ -89,5 +91,17 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	{
 		CharacterDamage = Fighter->GetDamage();
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Character damage: %f"), CharacterDamage);
+
+	FDamageEvent DamageEvent{};
+	AController* InstigatorController{GetOwner()->GetInstigatorController()};
+
+	for (const FHitResult& HitResult : OutResults)
+	{
+		AActor* HitActor{HitResult.GetActor()};
+
+		// Apply damage to the hit actor, both approaches are valid
+		// HitActor->TakeDamage(CharacterDamage, DamageEvent, InstigatorController, GetOwner());
+		UGameplayStatics::ApplyDamage(HitActor, CharacterDamage, InstigatorController, GetOwner(),
+		                              UDamageType::StaticClass());
+	}
 }
