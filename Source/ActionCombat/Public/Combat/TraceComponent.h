@@ -7,7 +7,7 @@
 #include "TraceComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -28,7 +28,14 @@ class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 
 	UPROPERTY(EditAnywhere)
 	bool bIsInDebugMode{false};
-public:	
+
+	TMap<AActor*, int32> DamagedActors;
+
+	// Number of hits that single attack can do
+	UPROPERTY(EditAnywhere)
+	int32 MaxHits{1};
+
+public:
 	// Sets default values for this component's properties
 	UTraceComponent();
 
@@ -36,9 +43,10 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	void EmptyDamagedActors();
 };

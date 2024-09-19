@@ -99,9 +99,30 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	{
 		AActor* HitActor{HitResult.GetActor()};
 
+		// Check if the actor has already been damaged
+		// If it has, check if it can be damaged again
+		// If it can't, continue to the next actor
+		if (!DamagedActors.Contains(HitActor))
+		{
+			DamagedActors.Add(HitActor, MaxHits);
+		}
+		else if (DamagedActors[HitActor] == 0)
+		{
+			continue;
+		}
+
+		DamagedActors[HitActor]--;
+
 		// Apply damage to the hit actor, both approaches are valid
 		// HitActor->TakeDamage(CharacterDamage, DamageEvent, InstigatorController, GetOwner());
 		UGameplayStatics::ApplyDamage(HitActor, CharacterDamage, InstigatorController, GetOwner(),
 		                              UDamageType::StaticClass());
+
+
 	}
+}
+
+void UTraceComponent::EmptyDamagedActors()
+{
+	DamagedActors.Empty();
 }
