@@ -13,15 +13,9 @@ void UComboContinuationAnimNotifyState::NotifyBegin(USkeletalMeshComponent* Mesh
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
-	if (!IsValid(MeshComp))
+	if (UCombatComponent* CombatComp = MeshComp->GetOwner()->GetComponentByClass<UCombatComponent>())
 	{
-		return;
-	}
-	if (ACharacter* OwningCharacter = Cast<ACharacter>(MeshComp->GetOwner()))
-	{
-		OwningCharacter->GetComponentByClass<UCombatComponent>()->EnableComboContinuation();
-		// Clear damaged actors, which contorls how many times an actor can be damaged in a single attack 
-		OwningCharacter->GetComponentByClass<UTraceComponent>()->EmptyDamagedActors();
+		CombatComp->EnableComboContinuation();
 	}
 }
 
@@ -30,13 +24,8 @@ void UComboContinuationAnimNotifyState::NotifyEnd(USkeletalMeshComponent* MeshCo
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-	if (!IsValid(MeshComp))
+	if (UCombatComponent* CombatComp = MeshComp->GetOwner()->GetComponentByClass<UCombatComponent>())
 	{
-		return;
-	}
-	if (ACharacter* OwningCharacter = Cast<ACharacter>(MeshComp->GetOwner()))
-	{
-		// Disable combo continuation
-		OwningCharacter->GetComponentByClass<UCombatComponent>()->ResetCombo();
+		CombatComp->ResetCombo();
 	}
 }
