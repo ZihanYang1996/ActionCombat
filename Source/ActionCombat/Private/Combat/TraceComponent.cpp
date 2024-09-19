@@ -32,6 +32,11 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!bIsAttacking)
+	{
+		return;
+	}
+
 	FVector StartSocketLocation{SkeletalMeshComponent->GetSocketLocation(StartSocket)};
 
 	FVector EndSocketLocation{SkeletalMeshComponent->GetSocketLocation(EndSocket)};
@@ -117,12 +122,18 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		// HitActor->TakeDamage(CharacterDamage, DamageEvent, InstigatorController, GetOwner());
 		UGameplayStatics::ApplyDamage(HitActor, CharacterDamage, InstigatorController, GetOwner(),
 		                              UDamageType::StaticClass());
-
-
 	}
 }
 
-void UTraceComponent::EmptyDamagedActors()
+void UTraceComponent::TraceStart()
 {
+	bIsAttacking = true;
+}
+
+// Clear damaged actors, which contorls how many times an actor can be damaged in a single attack
+// Also set bIsAttacking to false, so tracing is stopped
+void UTraceComponent::TraceReset()
+{
+	bIsAttacking = false;
 	DamagedActors.Empty();
 }

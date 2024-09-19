@@ -35,6 +35,9 @@ class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 	UPROPERTY(EditAnywhere)
 	int32 MaxHits{1};
 
+	UPROPERTY(VisibleAnywhere)
+	bool bIsAttacking{false};
+
 public:
 	// Sets default values for this component's properties
 	UTraceComponent();
@@ -48,5 +51,6 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
-	void EmptyDamagedActors();
+	void TraceStart();
+	void TraceReset();
 };
