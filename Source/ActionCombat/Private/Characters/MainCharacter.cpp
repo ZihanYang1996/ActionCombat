@@ -52,3 +52,8 @@ float AMainCharacter::GetDamage()
 {
 	return StatsComponent->Stats[ECharacterStat::Strength];
 }
+
+bool AMainCharacter::HasEnoughStamina_Implementation(float StaminaCost)
+{
+	return StatsComponent->Stats[ECharacterStat::Stamina] >= StaminaCost;
+}

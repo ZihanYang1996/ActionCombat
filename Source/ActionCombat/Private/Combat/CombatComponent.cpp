@@ -4,6 +4,7 @@
 #include "Combat/CombatComponent.h"
 
 #include "GameFramework/Character.h"
+#include "Interfaces/MainPlayer.h"
 
 // Sets default values for this component's properties
 UCombatComponent::UCombatComponent()
@@ -42,7 +43,7 @@ void UCombatComponent::CombatAttack()
 	{
 		return;
 	}
-	
+
 	// Check if we can continue the combo
 	if (bCanContinueCombo)
 	{
@@ -56,10 +57,16 @@ void UCombatComponent::CombatAttack()
 	// Set the attacking flag to true, to prevent the player from attacking again
 	bIsAttacking = true;
 
-	// Play the attack montage
-	OwnerCharacter->PlayAnimMontage(AttackMontages[CurrentAttackMontageIndex]);
+	// Check if the player has enough stamina to perform the attack
+	if (OwnerCharacter->Implements<UMainPlayer>() && IMainPlayer::Execute_HasEnoughStamina(
+		OwnerCharacter, AttackStaminaCost))
+	{
+		// If the player has enough stamina, reduce the stamina
+		OnAttackPerformedDelegate.Broadcast(AttackStaminaCost);
 
-	OnAttackPerformedDelegate.Broadcast(AttackStaminaCost);
+		// Play the attack montage (Perform the attack)
+		OwnerCharacter->PlayAnimMontage(AttackMontages[CurrentAttackMontageIndex]);
+	}
 }
 
 void UCombatComponent::EnableComboContinuation()
