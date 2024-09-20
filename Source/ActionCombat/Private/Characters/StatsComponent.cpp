@@ -28,3 +28,10 @@ void UStatsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 	// ...
 }
+
+void UStatsComponent::ReduceHealth(float Amount)
+{
+	Stats[ECharacterStat::Health] = FMath::Clamp((Stats[ECharacterStat::Health] - Amount), 0.0f,
+	                                             Stats[ECharacterStat::MaxHealth]);
+	UE_LOG(LogTemp, Warning, TEXT("Received %f damage! Remaining health is %f"), Amount, Stats[ECharacterStat::Health]);
+}

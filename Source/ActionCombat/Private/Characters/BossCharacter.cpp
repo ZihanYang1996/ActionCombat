@@ -3,11 +3,15 @@
 
 #include "Characters/BossCharacter.h"
 
+#include "Characters/StatsComponent.h"
+
 // Sets default values
 ABossCharacter::ABossCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	StatsComponent = CreateDefaultSubobject<UStatsComponent>("Stats Component");
 }
 
 // Called when the game starts or when spawned
@@ -38,5 +42,5 @@ void ABossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ABossCharacter::DamageReceidved(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
                                      AController* InstigatedBy, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Boss received %f damage!"), Damage);
+	StatsComponent->ReduceHealth(Damage);
 }

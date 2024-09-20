@@ -19,6 +19,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TMap<ECharacterStat, float> Stats;
+
+	void ReduceHealth(float Amount);
 	
 protected:
 	// Called when the game starts
