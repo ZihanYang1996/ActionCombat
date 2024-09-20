@@ -58,6 +58,8 @@ void UCombatComponent::CombatAttack()
 
 	// Play the attack montage
 	OwnerCharacter->PlayAnimMontage(AttackMontages[CurrentAttackMontageIndex]);
+
+	OnAttackPerformedDelegate.Broadcast(AttackStaminaCost);
 }
 
 void UCombatComponent::EnableComboContinuation()
