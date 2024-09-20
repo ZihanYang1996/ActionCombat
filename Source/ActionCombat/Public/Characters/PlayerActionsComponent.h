@@ -10,13 +10,16 @@
 class UCharacterMovementComponent;
 class IMainPlayer;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnSprintSignature, UPlayerActionsComponent, OnSprintDelegate, float,
+                                                   StaminaCost);
+
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API UPlayerActionsComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 	ACharacter* OwnerCharacter;
-	
+
 	UCharacterMovementComponent* CharacterMovementComponent;
 
 	UPROPERTY(EditAnywhere)
@@ -26,19 +29,22 @@ class ACTIONCOMBAT_API UPlayerActionsComponent : public UActorComponent
 	float SprintSpeed{1000.0f};
 
 	UPROPERTY(VisibleAnywhere)
-	float DefaultMaxWalkSpeed{500.0f};  // Temporarily set to 500.0f, will assign the actual value in BeginPlay
+	float DefaultMaxWalkSpeed{500.0f}; // Temporarily set to 500.0f, will assign the actual value in BeginPlay
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UPlayerActionsComponent();
+
+	FOnSprintSignature OnSprintDelegate;
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable)
 	void Sprinting();

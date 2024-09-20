@@ -3,6 +3,7 @@
 
 #include "Characters/StatsComponent.h"
 
+#include "Characters/PlayerActionsComponent.h"
 #include "Combat/CombatComponent.h"
 
 // Sets default values for this component's properties
@@ -24,6 +25,11 @@ void UStatsComponent::BeginPlay()
 	if (UCombatComponent* CombatComponent = GetOwner()->FindComponentByClass<UCombatComponent>())
 	{
 		CombatComponent->OnAttackPerformedDelegate.AddDynamic(this, &UStatsComponent::ReduceStamina);
+	}
+
+	if (UPlayerActionsComponent* PlayerActionsComponent = GetOwner()->FindComponentByClass<UPlayerActionsComponent>())
+	{
+		PlayerActionsComponent->OnSprintDelegate.AddDynamic(this, &UStatsComponent::ReduceStamina);
 	}
 }
 

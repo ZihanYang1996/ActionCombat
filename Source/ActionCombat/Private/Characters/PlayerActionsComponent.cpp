@@ -44,7 +44,18 @@ void UPlayerActionsComponent::Sprinting()
 {
 	if (IMainPlayer::Execute_HasEnoughStamina(OwnerCharacter, SprintStaminaCost))
 	{
+		if (CharacterMovementComponent->Velocity.Equals(FVector::ZeroVector, 1.0f))
+		{
+			// If the character is not moving, don't sprint
+			return;
+		}
 		CharacterMovementComponent->MaxWalkSpeed = SprintSpeed;
+		OnSprintDelegate.Broadcast(SprintStaminaCost);
+	}
+	else
+	{
+		// If the character doesn't have enough stamina, stop sprinting
+		StopSprinting();
 	}
 }
 
