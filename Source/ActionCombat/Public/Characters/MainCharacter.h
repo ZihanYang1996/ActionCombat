@@ -8,6 +8,12 @@
 #include "Interfaces/MainPlayer.h"
 #include "MainCharacter.generated.h"
 
+class UPlayerActionsComponent;
+class UBlockComponent;
+class UTraceComponent;
+class UCombatComponent;
+class ULockonComponent;
+class UStatsComponent;
 class UPlayerAnimInstance;
 
 UCLASS()
@@ -19,6 +25,24 @@ public:
 	// Sets default values for this character's properties
 	AMainCharacter();
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UStatsComponent* StatsComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	ULockonComponent* LockonComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UCombatComponent* CombatComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UTraceComponent* TraceComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UBlockComponent* BlockComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPlayerActionsComponent* PlayerActionsComponent;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
