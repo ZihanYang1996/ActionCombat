@@ -7,10 +7,26 @@
 #include "PlayerActionsComponent.generated.h"
 
 
+class UCharacterMovementComponent;
+class IMainPlayer;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONCOMBAT_API UPlayerActionsComponent : public UActorComponent
 {
 	GENERATED_BODY()
+
+	ACharacter* OwnerCharacter;
+	
+	UCharacterMovementComponent* CharacterMovementComponent;
+
+	UPROPERTY(EditAnywhere)
+	float SprintStaminaCost{0.1f};
+
+	UPROPERTY(EditAnywhere)
+	float SprintSpeed{1000.0f};
+
+	UPROPERTY(VisibleAnywhere)
+	float DefaultMaxWalkSpeed{500.0f};  // Temporarily set to 500.0f, will assign the actual value in BeginPlay
 
 public:	
 	// Sets default values for this component's properties
@@ -24,5 +40,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UFUNCTION(BlueprintCallable)
+	void Sprinting();
+
+	UFUNCTION(BlueprintCallable)
+	void StopSprinting();
 };

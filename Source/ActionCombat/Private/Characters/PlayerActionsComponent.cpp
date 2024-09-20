@@ -3,6 +3,9 @@
 
 #include "Characters/PlayerActionsComponent.h"
 
+#include "Characters/MainCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 // Sets default values for this component's properties
 UPlayerActionsComponent::UPlayerActionsComponent()
 {
@@ -19,8 +22,13 @@ void UPlayerActionsComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	OwnerCharacter = Cast<ACharacter>(GetOwner());
+
+	CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();  // Or GetComponentByClass<UCharacterMovementComponent>();
+	if (CharacterMovementComponent)
+	{
+		DefaultMaxWalkSpeed = CharacterMovementComponent->MaxWalkSpeed;  // Assign the actual value of MaxWalkSpeed
+	}
 }
 
 
@@ -32,3 +40,15 @@ void UPlayerActionsComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// ...
 }
 
+void UPlayerActionsComponent::Sprinting()
+{
+	if (IMainPlayer::Execute_HasEnoughStamina(OwnerCharacter, SprintStaminaCost))
+	{
+		CharacterMovementComponent->MaxWalkSpeed = SprintSpeed;
+	}
+}
+
+void UPlayerActionsComponent::StopSprinting()
+{
+	CharacterMovementComponent->MaxWalkSpeed = DefaultMaxWalkSpeed;
+}
