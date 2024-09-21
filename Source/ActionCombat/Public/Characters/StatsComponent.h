@@ -16,6 +16,14 @@ class ACTIONCOMBAT_API UStatsComponent : public UActorComponent
 	UPROPERTY(EditAnywhere)
 	double StaminaRegenRate{10.0f};
 
+	FTimerHandle StaminaRegenTimer;
+
+	void EnableStaminaRegen();
+
+	bool bCanStaminaRegen{true};
+
+	float StaminaDelayDuration{2.0f};
+
 public:
 	// Sets default values for this component's properties
 	UStatsComponent();

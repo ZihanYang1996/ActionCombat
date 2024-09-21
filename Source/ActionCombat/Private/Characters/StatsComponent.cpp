@@ -44,6 +44,10 @@ void UStatsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UStatsComponent::RegenerateStamina()
 {
+	if (!bCanStaminaRegen)
+	{
+		return;
+	}
 	Stats[ECharacterStat::Stamina] = FMath::FInterpConstantTo(Stats[ECharacterStat::Stamina],
 	                                                          Stats[ECharacterStat::MaxStamina],
 	                                                          GetWorld()->GetDeltaSeconds(),
@@ -62,4 +66,14 @@ void UStatsComponent::ReduceStamina(float Amount)
 	Stats[ECharacterStat::Stamina] = FMath::Clamp((Stats[ECharacterStat::Stamina] - Amount), 0.0f,
 	                                              Stats[ECharacterStat::MaxStamina]);
 	UE_LOG(LogTemp, Warning, TEXT("Stamina reduced to %f"), Stats[ECharacterStat::Stamina]);
+
+	bCanStaminaRegen = false;
+	
+	GetWorld()->GetTimerManager().SetTimer(StaminaRegenTimer, this, &UStatsComponent::EnableStaminaRegen,
+	                                       StaminaDelayDuration, false);
+}
+
+void UStatsComponent::EnableStaminaRegen()
+{
+	bCanStaminaRegen = true;
 }
