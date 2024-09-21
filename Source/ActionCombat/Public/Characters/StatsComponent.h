@@ -13,6 +13,9 @@ class ACTIONCOMBAT_API UStatsComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere)
+	double StaminaRegenRate{10.0f};
+
 public:
 	// Sets default values for this component's properties
 	UStatsComponent();
@@ -33,4 +36,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
+
+	void RegenerateStamina();
 };

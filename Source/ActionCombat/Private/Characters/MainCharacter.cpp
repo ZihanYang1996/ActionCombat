@@ -40,6 +40,9 @@ void AMainCharacter::BeginPlay()
 void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	StatsComponent->RegenerateStamina();
+	
 	double CurrentVelocity{GetVelocity().Length()};
 	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current Velocity: %f"), CurrentVelocity));
 }

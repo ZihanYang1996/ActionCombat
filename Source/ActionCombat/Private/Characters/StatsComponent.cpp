@@ -42,6 +42,14 @@ void UStatsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
+void UStatsComponent::RegenerateStamina()
+{
+	Stats[ECharacterStat::Stamina] = FMath::FInterpConstantTo(Stats[ECharacterStat::Stamina],
+	                                                          Stats[ECharacterStat::MaxStamina],
+	                                                          GetWorld()->GetDeltaSeconds(),
+	                                                          StaminaRegenRate);
+}
+
 void UStatsComponent::ReduceHealth(float Amount)
 {
 	Stats[ECharacterStat::Health] = FMath::Clamp((Stats[ECharacterStat::Health] - Amount), 0.0f,
