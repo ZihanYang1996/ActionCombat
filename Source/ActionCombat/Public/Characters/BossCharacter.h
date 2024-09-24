@@ -37,4 +37,7 @@ public:
 	UFUNCTION()
 	void DamageReceidved(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
 									 AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION(BlueprintCallable)
+	void DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const;
 };

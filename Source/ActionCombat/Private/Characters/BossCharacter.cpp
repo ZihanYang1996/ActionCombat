@@ -44,3 +44,12 @@ void ABossCharacter::DamageReceidved(AActor* DamagedActor, float Damage, const c
 {
 	StatsComponent->ReduceHealth(Damage);
 }
+
+void ABossCharacter::DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const
+{
+	if (PawnDetected != PawnToDetect)
+	{
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Pawn Detected!"));
+}
