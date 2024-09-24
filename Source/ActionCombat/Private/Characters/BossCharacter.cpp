@@ -3,6 +3,8 @@
 
 #include "Characters/BossCharacter.h"
 
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/StatsComponent.h"
 
 // Sets default values
@@ -19,6 +21,9 @@ void ABossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	OnTakeAnyDamage.AddDynamic(this, &ABossCharacter::DamageReceidved);
+	
+	BlackboardComponent = GetController<AAIController>()->GetBlackboardComponent();
+	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(InitialState));
 }
 
 // Called every frame
@@ -47,9 +52,11 @@ void ABossCharacter::DamageReceidved(AActor* DamagedActor, float Damage, const c
 
 void ABossCharacter::DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const
 {
-	if (PawnDetected != PawnToDetect)
+	// If the detected pawn is not the one to detect or the current state is already range, return
+	EEnemyState CurrentState = static_cast<EEnemyState>(BlackboardComponent->GetValueAsEnum(TEXT("CurrentState")));
+	if (PawnDetected != PawnToDetect || CurrentState == EEnemyState::Range)
 	{
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Pawn Detected!"));
+	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(EEnemyState::Range));
 }

@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "EEnemyState.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/Enemy.h"
 #include "BossCharacter.generated.h"
 
+class UBlackboardComponent;
 class UStatsComponent;
 
 UCLASS()
@@ -20,6 +22,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UStatsComponent* StatsComponent;
+
+	UPROPERTY(EditAnywhere)
+	EEnemyState InitialState;
+	UBlackboardComponent* BlackboardComponent;
 
 protected:
 	// Called when the game starts or when spawned
