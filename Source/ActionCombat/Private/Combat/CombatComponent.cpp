@@ -54,13 +54,13 @@ void UCombatComponent::CombatAttack()
 		CurrentAttackMontageIndex = 0;
 	}
 
-	// Set the attacking flag to true, to prevent the player from attacking again
-	bIsAttacking = true;
-
 	// Check if the player has enough stamina to perform the attack
 	if (OwnerCharacter->Implements<UMainPlayer>() && IMainPlayer::Execute_HasEnoughStamina(
 		OwnerCharacter, AttackStaminaCost))
 	{
+		// Set the attacking flag to true, to prevent the player from attacking again
+		bIsAttacking = true;
+		
 		// If the player has enough stamina, reduce the stamina
 		OnAttackPerformedDelegate.Broadcast(AttackStaminaCost);
 
