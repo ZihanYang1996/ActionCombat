@@ -15,4 +15,7 @@ class ACTIONCOMBAT_API UBTT_RangeAttack : public UBTTaskNode
 	GENERATED_BODY()
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* RangedAttack;
 };
