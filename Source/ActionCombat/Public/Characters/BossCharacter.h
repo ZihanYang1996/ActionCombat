@@ -16,6 +16,9 @@ class ACTIONCOMBAT_API ABossCharacter : public ACharacter, public IEnemy
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere)
+	USceneComponent* ProjectileSpawnPoint;
+
 public:
 	// Sets default values for this character's properties
 	ABossCharacter();

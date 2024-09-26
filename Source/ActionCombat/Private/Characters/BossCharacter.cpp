@@ -12,8 +12,11 @@ ABossCharacter::ABossCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	StatsComponent = CreateDefaultSubobject<UStatsComponent>("Stats Component");
+	
+	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
+	ProjectileSpawnPoint->SetupAttachment(RootComponent);
+	
+	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("Stats Component"));
 }
 
 // Called when the game starts or when spawned
