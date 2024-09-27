@@ -4,6 +4,7 @@
 #include "Combat/EnemyProjectile.h"
 
 #include "Components/SphereComponent.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AEnemyProjectile::AEnemyProjectile()
@@ -19,6 +20,7 @@ void AEnemyProjectile::BeginPlay()
 	Super::BeginPlay();
 
 	SphereComponent = GetComponentByClass<USphereComponent>();
+	ParticleSystemComponent = GetComponentByClass<UParticleSystemComponent>();
 
 	if (IsValid(SphereComponent))
 	{
@@ -44,5 +46,17 @@ void AEnemyProjectile::HandleBeginOverlap(UPrimitiveComponent* OverlappedCompone
 		return;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Projectile overlapped with %s"), *OtherActor->GetName());
+
+	if (IsValid(ParticleSystemComponent))
+	{
+		ParticleSystemComponent->SetTemplate(ExplosionParticle);
+		ParticleSystemComponent->Activate();
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &AEnemyProjectile::DestoryProjectile, 1.0f);
 }
 
+void AEnemyProjectile::DestoryProjectile()
+{
+	Destroy();
+}

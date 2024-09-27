@@ -14,6 +14,12 @@ class ACTIONCOMBAT_API AEnemyProjectile : public AActor
 	GENERATED_BODY()
 
 	USphereComponent* SphereComponent;
+	UParticleSystemComponent* ParticleSystemComponent;
+
+	UFUNCTION()
+	void DestoryProjectile();
+
+	FTimerHandle DestroyTimerHandle;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -30,5 +36,8 @@ public:
 	UFUNCTION()
 	void HandleBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	                         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* ExplosionParticle;
 
 };
