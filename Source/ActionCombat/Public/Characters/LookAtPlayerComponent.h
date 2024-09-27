@@ -31,4 +31,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	float RotationSpeed{5.0f};
+
+	UPROPERTY(EditAnywhere)
+	bool bCanRotate{false};
 };

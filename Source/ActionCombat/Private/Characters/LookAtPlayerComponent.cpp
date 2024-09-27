@@ -21,16 +21,19 @@ void ULookAtPlayerComponent::BeginPlay()
 
 	OwnerPtr = GetOwner();
 	// ...
-	
 }
 
 
 // Called every frame
-void ULookAtPlayerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void ULookAtPlayerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                           FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	LookAtPlayer();
+	if (bCanRotate)
+	{
+		LookAtPlayer();
+	}
 }
 
 void ULookAtPlayerComponent::LookAtPlayer()
@@ -38,9 +41,9 @@ void ULookAtPlayerComponent::LookAtPlayer()
 	FVector PlayerLocation{GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()};
 	FRotator TargetRotation{FRotationMatrix::MakeFromX(PlayerLocation - OwnerPtr->GetActorLocation()).Rotator()};
 
-	FRotator NewRotation{FMath::RInterpTo(OwnerPtr->GetActorRotation(), TargetRotation, GetWorld()->GetDeltaSeconds(), RotationSpeed)};
+	FRotator NewRotation{
+		FMath::RInterpTo(OwnerPtr->GetActorRotation(), TargetRotation, GetWorld()->GetDeltaSeconds(), RotationSpeed)
+	};
 
 	OwnerPtr->SetActorRotation(NewRotation);
-	
 }
-
