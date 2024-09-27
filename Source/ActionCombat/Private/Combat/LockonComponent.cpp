@@ -58,7 +58,7 @@ void ULockonComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		}
 
 		EndLocation.Z -= 150.0f; // Make the rotation looks downwards a bit
-		// FindLookAtRotation uses FRotationMatrix::MakeFromX(X).Rotator() internally
+		// FindLookAtRotation uses FRotationMatrix::MakeFromX(Target - Start).Rotator() internally
 		FRotator LookAtRotation{UKismetMathLibrary::FindLookAtRotation(StartLocation, EndLocation)};
 
 		PlayerController->SetControlRotation(LookAtRotation);

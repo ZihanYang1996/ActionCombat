@@ -23,7 +23,8 @@ void UEnemyProjectileComponent::BeginPlay()
 
 
 // Called every frame
-void UEnemyProjectileComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UEnemyProjectileComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                              FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -38,5 +39,15 @@ void UEnemyProjectileComponent::SpawnProjectile()
 		return;
 	}
 	FVector SpawnLocation{ProjectileSpawnPoint->GetComponentLocation()};
-	GetWorld()->SpawnActor(ProjectileClass, &SpawnLocation);
+
+	// Calculate the rotation of the projectile
+	FVector PlayerLocation{GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation()};
+	// Option 1:
+	// FRotator SpawnRotation{FVector{PlayerLocation - SpawnLocation}.GetSafeNormal().Rotation()};
+	// Option 2:
+	// FRotator SpawnRotation{UKismetMathLibrary::FindLookAtRotation(SpawnLocation, PlayerLocation)};
+	// Option 3:
+	FRotator SpawnRotation{FRotationMatrix::MakeFromX(PlayerLocation - SpawnLocation).Rotator()};
+
+	GetWorld()->SpawnActor(ProjectileClass, &SpawnLocation, &SpawnRotation);
 }
