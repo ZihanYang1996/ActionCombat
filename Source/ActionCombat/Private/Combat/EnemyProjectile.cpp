@@ -47,6 +47,7 @@ void AEnemyProjectile::HandleBeginOverlap(UPrimitiveComponent* OverlappedCompone
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Projectile overlapped with %s"), *OtherActor->GetName());
 
+	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	if (IsValid(ParticleSystemComponent))
 	{
 		ParticleSystemComponent->SetTemplate(ExplosionParticle);
