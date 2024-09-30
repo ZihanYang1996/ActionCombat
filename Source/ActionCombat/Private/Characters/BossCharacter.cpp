@@ -23,7 +23,7 @@ ABossCharacter::ABossCharacter()
 void ABossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	OnTakeAnyDamage.AddDynamic(this, &ABossCharacter::DamageReceidved);
+	OnTakeAnyDamage.AddDynamic(this, &ABossCharacter::DamageReceived);
 	
 	BlackboardComponent = GetController<AAIController>()->GetBlackboardComponent();
 	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(InitialState));
@@ -47,7 +47,7 @@ void ABossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 // 	UE_LOG(LogTemp, Warning, TEXT("Blueprint implementation is forgotten!"));
 // }
 
-void ABossCharacter::DamageReceidved(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+void ABossCharacter::DamageReceived(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
                                      AController* InstigatedBy, AActor* DamageCauser)
 {
 	StatsComponent->ReduceHealth(Damage);

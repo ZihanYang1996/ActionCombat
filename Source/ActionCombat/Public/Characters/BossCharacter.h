@@ -44,7 +44,7 @@ public:
 	// virtual void OnSelected_Implementation() override;
 
 	UFUNCTION()
-	void DamageReceidved(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
+	void DamageReceived(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
 									 AController* InstigatedBy, AActor* DamageCauser);
 
 	UFUNCTION(BlueprintCallable)
