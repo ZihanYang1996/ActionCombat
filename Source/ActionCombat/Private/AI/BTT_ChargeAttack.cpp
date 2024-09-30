@@ -4,18 +4,17 @@
 #include "AI/BTT_ChargeAttack.h"
 
 #include "AIController.h"
+#include "Animations/BossAnimInstance.h"
 #include "GameFramework/Character.h"
 
 EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	ACharacter* CharacterRef{OwnerComp.GetAIOwner()->GetCharacter()};
+	AIControllerPtr = OwnerComp.GetAIOwner();
 	
-	if (!IsValid(CharacterRef))
-	{
-		return EBTNodeResult::Failed;
-	}
+	CharacterPtr = AIControllerPtr->GetCharacter();
 
-	// CharacterRef->PlayAnimMontage(ChargeAttack);
-	UE_LOG(LogTemp, Warning, TEXT("Charge attack!"));
-	return EBTNodeResult::Succeeded;
+	BossAnimInstancePtr = Cast<UBossAnimInstance>(CharacterPtr->GetMesh()->GetAnimInstance());
+
+	BossAnimInstancePtr->bIsCharging = true;
+	return EBTNodeResult::InProgress;
 }
