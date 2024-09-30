@@ -24,7 +24,6 @@ AMainCharacter::AMainCharacter()
 	TraceComponent = CreateDefaultSubobject<UTraceComponent>(TEXT("Trace Component"));
 	BlockComponent = CreateDefaultSubobject<UBlockComponent>(TEXT("Block Component"));
 	PlayerActionsComponent = CreateDefaultSubobject<UPlayerActionsComponent>(TEXT("Player Actions Component"));
-	
 }
 
 // Called when the game starts or when spawned
@@ -34,6 +33,8 @@ void AMainCharacter::BeginPlay()
 
 	// Get Animation Instance
 	PlayerAnimInstance = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+
+	OnTakeAnyDamage.AddDynamic(this, &AMainCharacter::OnDamageReceived);
 }
 
 // Called every frame
@@ -42,9 +43,10 @@ void AMainCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	StatsComponent->RegenerateStamina();
-	
+
 	double CurrentVelocity{GetVelocity().Length()};
-	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("Current Velocity: %f"), CurrentVelocity));
+	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red,
+	                                 FString::Printf(TEXT("Current Velocity: %f"), CurrentVelocity));
 }
 
 // Called to bind functionality to input
@@ -61,4 +63,10 @@ float AMainCharacter::GetDamage()
 bool AMainCharacter::HasEnoughStamina_Implementation(float StaminaCost)
 {
 	return StatsComponent->Stats[ECharacterStat::Stamina] >= StaminaCost;
+}
+
+void AMainCharacter::OnDamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+                                      AController* InstigatedBy, AActor* DamageCauser)
+{
+	StatsComponent->ReduceHealth(Damage);
 }

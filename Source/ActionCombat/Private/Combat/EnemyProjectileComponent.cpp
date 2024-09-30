@@ -49,5 +49,6 @@ void UEnemyProjectileComponent::SpawnProjectile()
 	// Option 3:
 	FRotator SpawnRotation{FRotationMatrix::MakeFromX(PlayerLocation - SpawnLocation).Rotator()};
 
-	GetWorld()->SpawnActor(ProjectileClass, &SpawnLocation, &SpawnRotation);
+	AActor* SpawnedProjectile{GetWorld()->SpawnActor(ProjectileClass, &SpawnLocation, &SpawnRotation)};
+	SpawnedProjectile->SetOwner(GetOwner());
 }

@@ -4,6 +4,7 @@
 #include "Combat/EnemyProjectile.h"
 
 #include "Components/SphereComponent.h"
+#include "Engine/DamageEvents.h"
 #include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
@@ -45,15 +46,28 @@ void AEnemyProjectile::HandleBeginOverlap(UPrimitiveComponent* OverlappedCompone
 	{
 		return;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Projectile overlapped with %s"), *OtherActor->GetName());
 
+	// Apply damage to the player
+	FDamageEvent DamageEvent{};
+	if (!IsValid(GetOwner()))
+	{
+		UE_LOG(LogTemp, Error, TEXT("Owner is not valid!"));
+		return;
+	}
+	AController* InstigatorController{GetOwner()->GetInstigatorController()}; 
+	OtherActor->TakeDamage(ProjectileDamage, DamageEvent, InstigatorController, GetOwner());
+
+	// Disable the collision
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	// Play the explosion particle
 	if (IsValid(ParticleSystemComponent))
 	{
 		ParticleSystemComponent->SetTemplate(ExplosionParticle);
 		ParticleSystemComponent->Activate();
 	}
 
+	// Set a timer to destroy the projectile
 	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &AEnemyProjectile::DestoryProjectile, 1.0f);
 }
 

@@ -20,8 +20,11 @@ class ACTIONCOMBAT_API AEnemyProjectile : public AActor
 	void DestoryProjectile();
 
 	FTimerHandle DestroyTimerHandle;
-	
-public:	
+
+	UPROPERTY(EditAnywhere)
+	float ProjectileDamage{10.0f};
+
+public:
 	// Sets default values for this actor's properties
 	AEnemyProjectile();
 
@@ -29,15 +32,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
-	void HandleBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	                         int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void HandleBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                        UPrimitiveComponent* OtherComp,
+	                        int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* ExplosionParticle;
-
 };

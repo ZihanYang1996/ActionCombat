@@ -21,6 +21,9 @@ class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer, p
 {
 	GENERATED_BODY()
 
+	UFUNCTION()
+	void OnDamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
 public:
 	// Sets default values for this character's properties
 	AMainCharacter();
