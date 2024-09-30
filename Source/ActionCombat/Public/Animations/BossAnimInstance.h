@@ -20,4 +20,8 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateSpeed();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsCharging{false};
 };
