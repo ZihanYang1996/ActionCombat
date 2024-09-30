@@ -57,7 +57,7 @@ void ABossCharacter::DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const
 {
 	// If the detected pawn is not the one to detect or the current state is already range, return
 	EEnemyState CurrentState = static_cast<EEnemyState>(BlackboardComponent->GetValueAsEnum(TEXT("CurrentState")));
-	if (PawnDetected != PawnToDetect || CurrentState == EEnemyState::Range)
+	if (PawnDetected != PawnToDetect || CurrentState != EEnemyState::Idle)
 	{
 		return;
 	}
