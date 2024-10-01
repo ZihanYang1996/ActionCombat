@@ -17,12 +17,17 @@ class ACTIONCOMBAT_API UBTT_ChargeAttack : public UBTTaskNode
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
+	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+
 	AAIController* AIControllerPtr;
 
 	ACharacter* CharacterPtr;
 
 	UBossAnimInstance* BossAnimInstancePtr;
 
-	// UPROPERTY(EditAnywhere)
-	// UAnimMontage* ChargeAttack;
+	void ChargeAtPlayer();
+
+
+public:
+	UBTT_ChargeAttack();
 };
