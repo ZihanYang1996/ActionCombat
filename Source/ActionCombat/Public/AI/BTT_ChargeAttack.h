@@ -27,6 +27,9 @@ class ACTIONCOMBAT_API UBTT_ChargeAttack : public UBTTaskNode
 
 	void ChargeAtPlayer();
 
+	UPROPERTY(EditAnywhere)
+	float AcceptanceRadius{100.0f};
+
 
 public:
 	UBTT_ChargeAttack();
