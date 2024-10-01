@@ -56,5 +56,23 @@ void UBTT_ChargeAttack::ChargeAtPlayer()
 		AIControllerPtr->MoveTo(MoveRequest);
 		// Aim at the player
 		AIControllerPtr->SetFocus(TargetPawn);
+
+		// Bind the HandleMoveCompleted function to the ReceiveMoveCompleted event
+		AIControllerPtr->ReceiveMoveCompleted.AddUniqueDynamic(this, &UBTT_ChargeAttack::HandleMoveCompleted);
 	}
+}
+
+// Function will be called when the AI has reached the player
+void UBTT_ChargeAttack::HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result)
+{
+	BossAnimInstancePtr->bIsCharging = false;
+
+	// Create a timer
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_ChargeAttack::FinishAttackTask, 1.0f, false);
+}
+
+void UBTT_ChargeAttack::FinishAttackTask()
+{
+	UE_LOG(LogTemp, Warning, TEXT("FinishAttackTask"));
 }

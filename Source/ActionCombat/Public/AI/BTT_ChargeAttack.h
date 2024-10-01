@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "Navigation/PathFollowingComponent.h"
 #include "BTT_ChargeAttack.generated.h"
 
 class UBossAnimInstance;
@@ -30,6 +31,10 @@ class ACTIONCOMBAT_API UBTT_ChargeAttack : public UBTTaskNode
 	UPROPERTY(EditAnywhere)
 	float AcceptanceRadius{100.0f};
 
+	void FinishAttackTask();
+	
+	UFUNCTION()
+	void HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 
 public:
 	UBTT_ChargeAttack();
