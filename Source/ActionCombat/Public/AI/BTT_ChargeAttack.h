@@ -37,7 +37,10 @@ class ACTIONCOMBAT_API UBTT_ChargeAttack : public UBTTaskNode
 	void HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 
 	float OriginalWalkSpeed;
+	
 	float ChargeWalkSpeed{2000.0f};
+
+	bool bIsFinished{false};
 
 public:
 	UBTT_ChargeAttack();

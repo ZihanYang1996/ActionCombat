@@ -31,6 +31,7 @@ EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	// Set the IsReadyToCharge key to false first, because there are some animations that need to be played before the charge
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsReadyToCharge"), false);
 
+	bIsFinished = false;
 	return EBTNodeResult::InProgress;
 }
 
@@ -41,6 +42,11 @@ void UBTT_ChargeAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsReadyToCharge"), false);
 		ChargeAtPlayer();
+	}
+	if (bIsFinished)
+	{
+		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+		AIControllerPtr->ReceiveMoveCompleted.RemoveDynamic(this, &UBTT_ChargeAttack::HandleMoveCompleted);
 	}
 }
 
@@ -85,4 +91,5 @@ void UBTT_ChargeAttack::HandleMoveCompleted(FAIRequestID RequestID, EPathFollowi
 void UBTT_ChargeAttack::FinishAttackTask()
 {
 	UE_LOG(LogTemp, Warning, TEXT("FinishAttackTask"));
+	bIsFinished = true;
 }
