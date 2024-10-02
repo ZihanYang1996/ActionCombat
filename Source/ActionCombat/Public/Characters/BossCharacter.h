@@ -6,13 +6,14 @@
 #include "EEnemyState.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/Enemy.h"
+#include "Interfaces/Fighter.h"
 #include "BossCharacter.generated.h"
 
 class UBlackboardComponent;
 class UStatsComponent;
 
 UCLASS()
-class ACTIONCOMBAT_API ABossCharacter : public ACharacter, public IEnemy
+class ACTIONCOMBAT_API ABossCharacter : public ACharacter, public IEnemy, public IFighter
 {
 	GENERATED_BODY()
 
@@ -49,4 +50,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const;
+
+	virtual float GetDamage() override;
 };

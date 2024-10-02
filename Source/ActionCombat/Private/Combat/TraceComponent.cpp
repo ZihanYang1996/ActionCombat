@@ -37,54 +37,69 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		return;
 	}
 
-	FVector StartSocketLocation{SkeletalMeshComponent->GetSocketLocation(StartSocket)};
+	// Create a TArray of FHitResult to store the all the results of the traces
+	TArray<FHitResult> AllOutResults;
 
-	FVector EndSocketLocation{SkeletalMeshComponent->GetSocketLocation(EndSocket)};
-
-	FQuat ShapeRotation{SkeletalMeshComponent->GetSocketQuaternion(Rotation)};
-
-	FVector WeaponCenter{(StartSocketLocation + EndSocketLocation) / 2.0f};
-
-	TArray<FHitResult> OutResults;
-
-	double WeaponLength{FVector::Distance(StartSocketLocation, EndSocketLocation)};
-
-	FVector BoxHalfExtent{BoxCollisionEdgeLength, BoxCollisionEdgeLength, WeaponLength};
-	BoxHalfExtent /= 2.0f;
-
-	FCollisionShape Box{FCollisionShape::MakeBox(BoxHalfExtent)};
-
-	FCollisionQueryParams CollisionParams{
-		FName{TEXT("Ignore Collision Params")},
-		false,
-		GetOwner()
-	};
-
-	bool bHasFoundTargets{
-		GetWorld()->SweepMultiByChannel(
-			OutResults,
-			WeaponCenter,
-			WeaponCenter,
-			ShapeRotation,
-			ECollisionChannel::ECC_GameTraceChannel1,
-			Box,
-			CollisionParams
-		)
-	};
-
-	if (bIsInDebugMode)
+	// Iterate over all the TraceSocket structs
+	for (const FTraceSockets& TraceSockets : TraceSocketsArray)
 	{
-		DrawDebugBox(GetWorld(),
-		             WeaponCenter,
-		             Box.GetExtent(),
-		             ShapeRotation,
-		             bHasFoundTargets ? FColor::Green : FColor::Red,
-		             false,
-		             1.0f);
+		FVector StartSocketLocation{SkeletalMeshComponent->GetSocketLocation(TraceSockets.StartSocket)};
+
+		FVector EndSocketLocation{SkeletalMeshComponent->GetSocketLocation(TraceSockets.EndSocket)};
+
+		FQuat ShapeRotation{SkeletalMeshComponent->GetSocketQuaternion(TraceSockets.Rotation)};
+
+		FVector WeaponCenter{(StartSocketLocation + EndSocketLocation) / 2.0f};
+
+		TArray<FHitResult> OutResults;
+
+		double WeaponLength{FVector::Distance(StartSocketLocation, EndSocketLocation)};
+
+		FVector BoxHalfExtent{BoxCollisionEdgeLength, BoxCollisionEdgeLength, WeaponLength};
+		BoxHalfExtent /= 2.0f;
+
+		FCollisionShape Box{FCollisionShape::MakeBox(BoxHalfExtent)};
+
+		FCollisionQueryParams CollisionParams{
+			FName{TEXT("Ignore Collision Params")},
+			false,
+			GetOwner()
+		};
+
+		bool bHasFoundTargets{
+			GetWorld()->SweepMultiByChannel(
+				OutResults,
+				WeaponCenter,
+				WeaponCenter,
+				ShapeRotation,
+				ECollisionChannel::ECC_GameTraceChannel1,
+				Box,
+				CollisionParams
+			)
+		};
+
+		// Add all the results to the AllOutResults array
+		// for (const FHitResult& HitResult : OutResults)
+		// {
+		// 	AllOutResults.Add(HitResult);
+		// }
+		AllOutResults.Append(OutResults);
+
+		if (bIsInDebugMode)
+		{
+			DrawDebugBox(GetWorld(),
+			             WeaponCenter,
+			             Box.GetExtent(),
+			             ShapeRotation,
+			             bHasFoundTargets ? FColor::Green : FColor::Red,
+			             false,
+			             1.0f);
+		}
 	}
 
+
 	// Check if we have found any targets
-	if (OutResults.Num() == 0)
+	if (AllOutResults.Num() == 0)
 	{
 		return;
 	}
@@ -100,7 +115,7 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	FDamageEvent DamageEvent{};
 	AController* InstigatorController{GetOwner()->GetInstigatorController()};
 
-	for (const FHitResult& HitResult : OutResults)
+	for (const FHitResult& HitResult : AllOutResults)
 	{
 		AActor* HitActor{HitResult.GetActor()};
 
