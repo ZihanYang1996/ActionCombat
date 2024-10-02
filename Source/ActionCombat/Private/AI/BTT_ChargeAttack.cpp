@@ -7,6 +7,7 @@
 #include "Animations/BossAnimInstance.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Navigation/PathFollowingComponent.h"
 
 UBTT_ChargeAttack::UBTT_ChargeAttack()
@@ -24,6 +25,8 @@ EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	BossAnimInstancePtr = Cast<UBossAnimInstance>(CharacterPtr->GetMesh()->GetAnimInstance());
 
 	BossAnimInstancePtr->bIsCharging = true;
+
+	
 
 	// Set the IsReadyToCharge key to false first, because there are some animations that need to be played before the charge
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsReadyToCharge"), false);
@@ -46,6 +49,10 @@ void UBTT_ChargeAttack::ChargeAtPlayer()
 	APawn* TargetPawn{GetWorld()->GetFirstPlayerController()->GetCharacter()};
 	if (IsValid(TargetPawn))
 	{
+		// Boost the AI's speed
+		OriginalWalkSpeed = CharacterPtr->GetCharacterMovement()->MaxWalkSpeed;
+		CharacterPtr->GetCharacterMovement()->MaxWalkSpeed = ChargeWalkSpeed;
+		
 		FAIMoveRequest MoveRequest{TargetPawn};
 		// pathfinding: if set - regular pathfinding will be used, if not - direct path between two points
 		MoveRequest.SetUsePathfinding(true);
@@ -70,6 +77,9 @@ void UBTT_ChargeAttack::HandleMoveCompleted(FAIRequestID RequestID, EPathFollowi
 	// Create a timer
 	FTimerHandle TimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_ChargeAttack::FinishAttackTask, 1.0f, false);
+
+	// Reset the AI's speed
+	CharacterPtr->GetCharacterMovement()->MaxWalkSpeed = OriginalWalkSpeed;
 }
 
 void UBTT_ChargeAttack::FinishAttackTask()
