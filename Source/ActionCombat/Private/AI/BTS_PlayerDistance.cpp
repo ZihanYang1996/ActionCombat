@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/BTS_PlayerDistance.h"
+#include "AI/BTS_PlayerDistance.h"
 
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"

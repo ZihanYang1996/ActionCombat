@@ -21,4 +21,7 @@ class ACTIONCOMBAT_API UBTT_RangeAttack : public UBTTaskNode
 
 	UPROPERTY(EditAnywhere)
 	float ChargeAttackTransitionThreshold{0.9f};
+
+	UPROPERTY(EditAnywhere)
+	float MeleeRange{1200.0f};
 };
