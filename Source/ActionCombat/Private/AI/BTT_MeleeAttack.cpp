@@ -3,6 +3,11 @@
 
 #include "AI/BTT_MeleeAttack.h"
 
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "GameFramework/Character.h"
+#include "Navigation/PathFollowingComponent.h"
+
 UBTT_MeleeAttack::UBTT_MeleeAttack()
 {
 	NodeName = TEXT("Melee Attack");
@@ -11,6 +16,24 @@ UBTT_MeleeAttack::UBTT_MeleeAttack()
 
 EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
+	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
+
+	if (DistanceToPlayer > AttackRadius)
+	{
+		ACharacter* TargetCharacter{GetWorld()->GetFirstPlayerController()->GetCharacter()};
+		if (!IsValid(TargetCharacter))
+		{
+			return EBTNodeResult::Failed;
+		}
+		FAIMoveRequest MoveRequest{TargetCharacter};
+		MoveRequest.SetUsePathfinding(true);
+		MoveRequest.SetAcceptanceRadius(MoveAcceptanceRadius);
+
+		OwnerComp.GetAIOwner()->MoveTo(MoveRequest);
+		OwnerComp.GetAIOwner()->SetFocus(TargetCharacter);
+		
+	}
+	
 	return EBTNodeResult::Succeeded;
 }
 

@@ -18,6 +18,12 @@ class ACTIONCOMBAT_API UBTT_MeleeAttack : public UBTTaskNode
 
 	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
+	UPROPERTY(EditAnywhere)
+	float AttackRadius{200.0f};
+
+	UPROPERTY(EditAnywhere)
+	float MoveAcceptanceRadius{100.0f};
+
 public:
 	UBTT_MeleeAttack();
 };
