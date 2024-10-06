@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
+#include "Navigation/PathFollowingComponent.h"
 #include "BTT_MeleeAttack.generated.h"
 
 /**
@@ -24,6 +25,11 @@ class ACTIONCOMBAT_API UBTT_MeleeAttack : public UBTTaskNode
 	UPROPERTY(EditAnywhere)
 	float MoveAcceptanceRadius{100.0f};
 
+	bool bIsFinished{false};
+
 public:
 	UBTT_MeleeAttack();
+
+	UFUNCTION()
+	void FinishAttackTask(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 };
