@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/StatsComponent.h"
+#include "Combat/CombatComponent.h"
 
 // Sets default values
 ABossCharacter::ABossCharacter()
@@ -17,6 +18,8 @@ ABossCharacter::ABossCharacter()
 	ProjectileSpawnPoint->SetupAttachment(RootComponent);
 	
 	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("Stats Component"));
+
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
 }
 
 // Called when the game starts or when spawned
@@ -67,4 +70,9 @@ void ABossCharacter::DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const
 float ABossCharacter::GetDamage()
 {
 	return StatsComponent->Stats[ECharacterStat::Strength];
+}
+
+void ABossCharacter::Attack()
+{
+	CombatComponent->RandomAttack();
 }

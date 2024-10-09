@@ -9,6 +9,7 @@
 #include "Interfaces/Fighter.h"
 #include "BossCharacter.generated.h"
 
+class UCombatComponent;
 class UBlackboardComponent;
 class UStatsComponent;
 
@@ -19,6 +20,9 @@ class ACTIONCOMBAT_API ABossCharacter : public ACharacter, public IEnemy, public
 
 	UPROPERTY(EditAnywhere)
 	USceneComponent* ProjectileSpawnPoint;
+
+	UPROPERTY(EditAnywhere)
+	UCombatComponent* CombatComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -52,4 +56,6 @@ public:
 	void DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const;
 
 	virtual float GetDamage() override;
+
+	virtual void Attack() override;
 };

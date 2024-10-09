@@ -54,4 +54,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void CombatAttack();
+
+	UFUNCTION(BlueprintCallable)
+	void RandomAttack();
 };

@@ -27,9 +27,13 @@ class ACTIONCOMBAT_API UBTT_MeleeAttack : public UBTTaskNode
 
 	bool bIsFinished{false};
 
+	FTimerHandle TimerHandle;
+
+	void FinishAttackTask();
+
 public:
 	UBTT_MeleeAttack();
 
 	UFUNCTION()
-	void FinishAttackTask(FAIRequestID RequestID, EPathFollowingResult::Type Result);
+	void HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 };

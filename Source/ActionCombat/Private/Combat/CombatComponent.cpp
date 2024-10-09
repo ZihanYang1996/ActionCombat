@@ -60,7 +60,7 @@ void UCombatComponent::CombatAttack()
 	{
 		// Set the attacking flag to true, to prevent the player from attacking again
 		bIsAttacking = true;
-		
+
 		// If the player has enough stamina, reduce the stamina
 		OnAttackPerformedDelegate.Broadcast(AttackStaminaCost);
 
@@ -81,4 +81,10 @@ void UCombatComponent::ResetCombo()
 	// Reset the combo
 	bCanContinueCombo = false;
 	// CurrentAttackMontageIndex = 0;
+}
+
+void UCombatComponent::RandomAttack()
+{
+	int RandomIndex{FMath::RandRange(0, AttackMontages.Num() - 1)};
+	OwnerCharacter->PlayAnimMontage(AttackMontages[RandomIndex]);
 }
