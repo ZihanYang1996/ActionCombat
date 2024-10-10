@@ -13,3 +13,8 @@ float IFighter::GetDamage()
 void IFighter::Attack()
 {
 }
+
+float IFighter::GetAnimDuration() const
+{
+	return 0.0f;
+}

@@ -26,4 +26,6 @@ public:
 	virtual float GetDamage();
 
 	virtual void Attack();
+
+	virtual float GetAnimDuration() const;
 };

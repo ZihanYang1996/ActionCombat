@@ -76,3 +76,8 @@ void ABossCharacter::Attack()
 {
 	CombatComponent->RandomAttack();
 }
+
+float ABossCharacter::GetAnimDuration() const
+{
+	return CombatComponent->AnimDuration;
+}

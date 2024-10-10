@@ -46,13 +46,15 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		if (FighterInterfacePtr)
 		{
 			FighterInterfacePtr->Attack();
+			float AnimDuration{FighterInterfacePtr->GetAnimDuration()};
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_MeleeAttack::FinishAttackTask, AnimDuration, false);
 		}
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("The AI character does not implement the IFighter interface!"));
 		}
 
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_MeleeAttack::FinishAttackTask, 2.0f, false);
+		
 
 		return EBTNodeResult::InProgress;
 	}

@@ -57,4 +57,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RandomAttack();
+
+	float AnimDuration{0.0f};
 };

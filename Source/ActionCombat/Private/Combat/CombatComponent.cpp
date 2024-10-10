@@ -86,5 +86,5 @@ void UCombatComponent::ResetCombo()
 void UCombatComponent::RandomAttack()
 {
 	int RandomIndex{FMath::RandRange(0, AttackMontages.Num() - 1)};
-	OwnerCharacter->PlayAnimMontage(AttackMontages[RandomIndex]);
+	AnimDuration = OwnerCharacter->PlayAnimMontage(AttackMontages[RandomIndex]);
 }
