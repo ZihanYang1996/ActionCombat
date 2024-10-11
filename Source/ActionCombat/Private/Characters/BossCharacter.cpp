@@ -7,6 +7,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/StatsComponent.h"
 #include "Combat/CombatComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ABossCharacter::ABossCharacter()
@@ -20,6 +21,7 @@ ABossCharacter::ABossCharacter()
 	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("Stats Component"));
 
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 // Called when the game starts or when spawned
