@@ -28,4 +28,6 @@ public:
 	virtual void Attack();
 
 	virtual float GetAnimDuration() const;
+
+	virtual float GetMeleeRange() const;
 };

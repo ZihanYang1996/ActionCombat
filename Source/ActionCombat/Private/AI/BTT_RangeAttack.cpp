@@ -7,6 +7,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/EEnemyState.h"
 #include "GameFramework/Character.h"
+#include "Interfaces/Fighter.h"
 
 EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
@@ -18,7 +19,8 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	}
 
 	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
-	if (DistanceToPlayer < MeleeRange)
+	IFighter* FighterInterfacePtr{Cast<IFighter>(CharacterRef)};
+	if (DistanceToPlayer < FighterInterfacePtr->GetMeleeRange())
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsEnum(
 			TEXT("CurrentState"), static_cast<uint8>(EEnemyState::Melee));

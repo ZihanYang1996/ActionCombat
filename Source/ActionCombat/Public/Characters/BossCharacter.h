@@ -60,4 +60,6 @@ public:
 	virtual void Attack() override;
 
 	virtual float GetAnimDuration() const override;
+
+	virtual float GetMeleeRange() const override;
 };

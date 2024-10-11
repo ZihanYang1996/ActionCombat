@@ -83,3 +83,8 @@ float ABossCharacter::GetAnimDuration() const
 {
 	return CombatComponent->AnimDuration;
 }
+
+float ABossCharacter::GetMeleeRange() const
+{
+	return StatsComponent->Stats[ECharacterStat::MeleeRange];
+}

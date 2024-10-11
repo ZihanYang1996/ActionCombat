@@ -18,3 +18,8 @@ float IFighter::GetAnimDuration() const
 {
 	return 0.0f;
 }
+
+float IFighter::GetMeleeRange() const
+{
+	return 0.0f;
+}

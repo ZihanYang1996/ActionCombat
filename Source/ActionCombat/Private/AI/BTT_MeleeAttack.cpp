@@ -22,14 +22,6 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	bIsFinished = false;
 	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
 
-	// If the player is out of range, switch to the range state
-	if (DistanceToPlayer > MeleeRange)
-	{
-		OwnerComp.GetBlackboardComponent()->
-		          SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(EEnemyState::Range));
-		return EBTNodeResult::Aborted;
-	}
-
 	if (DistanceToPlayer > AttackRadius)
 	{
 		ACharacter* TargetCharacter{GetWorld()->GetFirstPlayerController()->GetCharacter()};
@@ -75,19 +67,20 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 void UBTT_MeleeAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
-	if (DistanceToPlayer > MeleeRange)
+	AAIController* AIController{OwnerComp.GetAIOwner()};
+	IFighter* FighterInterfacePtr{Cast<IFighter>(AIController->GetCharacter())};
+	if (DistanceToPlayer > FighterInterfacePtr->GetMeleeRange())
 	{
-		AAIController* AIController{OwnerComp.GetAIOwner()};
 		AIController->StopMovement();
 		AIController->ClearFocus(EAIFocusPriority::Gameplay);
-		
+
 		OwnerComp.GetAIOwner()->ReceiveMoveCompleted.RemoveDynamic(this, &UBTT_MeleeAttack::HandleMoveCompleted);
-		
+
 		OwnerComp.GetBlackboardComponent()->
 		          SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(EEnemyState::Range));
 		return FinishLatentTask(OwnerComp, EBTNodeResult::Aborted);
 	}
-	
+
 	if (bIsFinished)
 	{
 		OwnerComp.GetAIOwner()->ReceiveMoveCompleted.RemoveDynamic(this, &UBTT_MeleeAttack::HandleMoveCompleted);
