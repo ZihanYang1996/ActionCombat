@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Characters/EEnemyState.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/Fighter.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -20,6 +21,14 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 {
 	bIsFinished = false;
 	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
+
+	// If the player is out of range, switch to the range state
+	if (DistanceToPlayer > MeleeRange)
+	{
+		OwnerComp.GetBlackboardComponent()->
+		          SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(EEnemyState::Range));
+		return EBTNodeResult::Aborted;
+	}
 
 	if (DistanceToPlayer > AttackRadius)
 	{
@@ -47,14 +56,14 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		{
 			FighterInterfacePtr->Attack();
 			float AnimDuration{FighterInterfacePtr->GetAnimDuration()};
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_MeleeAttack::FinishAttackTask, AnimDuration, false);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_MeleeAttack::FinishAttackTask, AnimDuration,
+			                                       false);
 		}
 		else
 		{
 			UE_LOG(LogTemp, Error, TEXT("The AI character does not implement the IFighter interface!"));
 		}
 
-		
 
 		return EBTNodeResult::InProgress;
 	}
@@ -65,6 +74,20 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 
 void UBTT_MeleeAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
+	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
+	if (DistanceToPlayer > MeleeRange)
+	{
+		AAIController* AIController{OwnerComp.GetAIOwner()};
+		AIController->StopMovement();
+		AIController->ClearFocus(EAIFocusPriority::Gameplay);
+		
+		OwnerComp.GetAIOwner()->ReceiveMoveCompleted.RemoveDynamic(this, &UBTT_MeleeAttack::HandleMoveCompleted);
+		
+		OwnerComp.GetBlackboardComponent()->
+		          SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(EEnemyState::Range));
+		return FinishLatentTask(OwnerComp, EBTNodeResult::Aborted);
+	}
+	
 	if (bIsFinished)
 	{
 		OwnerComp.GetAIOwner()->ReceiveMoveCompleted.RemoveDynamic(this, &UBTT_MeleeAttack::HandleMoveCompleted);
@@ -75,7 +98,6 @@ void UBTT_MeleeAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 void UBTT_MeleeAttack::HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result)
 {
 	FinishAttackTask();
-	
 }
 
 void UBTT_MeleeAttack::FinishAttackTask()
