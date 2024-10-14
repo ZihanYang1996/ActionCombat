@@ -54,6 +54,11 @@ void UStatsComponent::RegenerateStamina()
 	                                                          StaminaRegenRate);
 }
 
+float UStatsComponent::GetStatPercentage(ECharacterStat Stat, ECharacterStat MaxStat) const
+{
+	return Stats[Stat] / Stats[MaxStat];
+}
+
 void UStatsComponent::ReduceHealth(float Amount)
 {
 	Stats[ECharacterStat::Health] = FMath::Clamp((Stats[ECharacterStat::Health] - Amount), 0.0f,

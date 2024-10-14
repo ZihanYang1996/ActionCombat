@@ -46,4 +46,7 @@ public:
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 	void RegenerateStamina();
+
+	UFUNCTION(BlueprintPure)
+	float GetStatPercentage(ECharacterStat Stat, ECharacterStat MaxStat) const;
 };
