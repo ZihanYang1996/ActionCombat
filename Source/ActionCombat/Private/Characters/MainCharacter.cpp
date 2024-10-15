@@ -77,7 +77,7 @@ void AMainCharacter::HandleDeath()
 	DisableInput(Cast<APlayerController>(GetController()));
 }
 
-void AMainCharacter::AbortLockon()
+void AMainCharacter::AbortLockon(AActor* TargetActor)
 {
-	LockonComponent->EndLockon();
+	LockonComponent->AbortLockon(TargetActor);
 }

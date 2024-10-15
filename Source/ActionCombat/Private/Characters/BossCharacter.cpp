@@ -115,7 +115,7 @@ void ABossCharacter::HandleDeath()
 
 	if (IMainPlayer* MainPlayerInterfacePtr{Cast<IMainPlayer>(GetWorld()->GetFirstPlayerController()->GetPawn())})
 	{
-		MainPlayerInterfacePtr->AbortLockon();
+		MainPlayerInterfacePtr->AbortLockon(this);
 	}
 
 	FTimerHandle TimerHandle;

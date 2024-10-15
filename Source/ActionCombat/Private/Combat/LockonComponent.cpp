@@ -169,3 +169,11 @@ void ULockonComponent::EndLockon()
 	// Broadcast the event that the target has been updated
 	OnUpdatedTargetDelegate.Broadcast(CurrentTargetActor);
 }
+
+void ULockonComponent::AbortLockon(AActor* TargetActor)
+{
+	if (bIsLockedOn && CurrentTargetActor == TargetActor)
+	{
+		EndLockon();
+	}
+}

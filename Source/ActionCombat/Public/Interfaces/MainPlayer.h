@@ -25,7 +25,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent)
 	bool HasEnoughStamina(float StaminaCost);
 
-	virtual void AbortLockon()
+	virtual void AbortLockon(AActor* TargetActor)
 	{
 	};
 };
