@@ -46,6 +46,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnUpdatedTargetSignature OnUpdatedTargetDelegate;
 
+	void EndLockon();
+
 private:
 	bool bIsLockedOn{false};
 
@@ -59,5 +61,5 @@ private:
 
 	void StartLockon(FHitResult HitResult);
 
-	void EndLockon();
+	
 };

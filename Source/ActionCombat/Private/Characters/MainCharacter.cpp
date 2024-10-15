@@ -76,3 +76,8 @@ void AMainCharacter::HandleDeath()
 	PlayAnimMontage(DeathAnimMontage);
 	DisableInput(Cast<APlayerController>(GetController()));
 }
+
+void AMainCharacter::AbortLockon()
+{
+	LockonComponent->EndLockon();
+}

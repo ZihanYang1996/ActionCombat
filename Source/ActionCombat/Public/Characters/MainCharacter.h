@@ -69,4 +69,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HandleDeath();
+
+	virtual void AbortLockon() override;
 };

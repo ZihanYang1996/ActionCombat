@@ -10,6 +10,7 @@
 #include "Combat/CombatComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interfaces/MainPlayer.h"
 
 // Sets default values
 ABossCharacter::ABossCharacter()
@@ -109,11 +110,17 @@ void ABossCharacter::HandleDeath()
 {
 	float DeathAnimationLength{PlayAnimMontage(DeathAnimMontage)};
 	AIController->BrainComponent->StopLogic("Defeated");
-	
+
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	if (IMainPlayer* MainPlayerInterfacePtr{Cast<IMainPlayer>(GetWorld()->GetFirstPlayerController()->GetPawn())})
+	{
+		MainPlayerInterfacePtr->AbortLockon();
+	}
+
 	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABossCharacter::AfterDeathAnimation, DeathAnimationLength+2, false);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABossCharacter::AfterDeathAnimation,
+	                                       DeathAnimationLength + 2, false);
 }
 
 void ABossCharacter::AfterDeathAnimation()
