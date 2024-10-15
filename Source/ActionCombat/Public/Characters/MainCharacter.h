@@ -24,6 +24,9 @@ class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer, p
 	UFUNCTION()
 	void OnDamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* DeathAnimMontage;
+	
 public:
 	// Sets default values for this character's properties
 	AMainCharacter();
@@ -63,4 +66,7 @@ public:
 	virtual float GetDamage() override;
 
 	virtual bool HasEnoughStamina_Implementation(float StaminaCost) override;
+
+	UFUNCTION(BlueprintCallable)
+	void HandleDeath();
 };

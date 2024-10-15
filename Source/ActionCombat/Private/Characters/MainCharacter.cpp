@@ -70,3 +70,9 @@ void AMainCharacter::OnDamageReceived(AActor* DamagedActor, float Damage, const 
 {
 	StatsComponent->ReduceHealth(Damage);
 }
+
+void AMainCharacter::HandleDeath()
+{
+	PlayAnimMontage(DeathAnimMontage);
+	DisableInput(Cast<APlayerController>(GetController()));
+}

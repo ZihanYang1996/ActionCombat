@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "StatsComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE(FOnZeroHealthSignature, UStatsComponent, OnZeroHealthDelegate);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API UStatsComponent : public UActorComponent
@@ -49,4 +50,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	float GetStatPercentage(ECharacterStat Stat, ECharacterStat MaxStat) const;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnZeroHealthSignature OnZeroHealthDelegate;
 };
