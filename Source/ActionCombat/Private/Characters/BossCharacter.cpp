@@ -4,9 +4,11 @@
 #include "Characters/BossCharacter.h"
 
 #include "AIController.h"
+#include "BrainComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Characters/StatsComponent.h"
 #include "Combat/CombatComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
@@ -28,15 +30,18 @@ ABossCharacter::ABossCharacter()
 void ABossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AIController = GetController<AAIController>();
+
 	OnTakeAnyDamage.AddDynamic(this, &ABossCharacter::DamageReceived);
 
-	BlackboardComponent = GetController<AAIController>()->GetBlackboardComponent();
+	BlackboardComponent = AIController->GetBlackboardComponent();
 	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(InitialState));
 
 	if (APawn* PlayerPawnPtr{GetWorld()->GetFirstPlayerController()->GetPawn()})
 	{
 		PlayerPawnPtr->GetComponentByClass<UStatsComponent>()->OnZeroHealthDelegate
-			  .AddDynamic(this, &ABossCharacter::HandlePlayerDeath);
+		             .AddDynamic(this, &ABossCharacter::HandlePlayerDeath);
 	}
 }
 
@@ -98,4 +103,12 @@ float ABossCharacter::GetMeleeRange() const
 void ABossCharacter::HandlePlayerDeath()
 {
 	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(EEnemyState::GameOver));
+}
+
+void ABossCharacter::HandleDeath()
+{
+	PlayAnimMontage(DeathAnimMontage);
+	AIController->BrainComponent->StopLogic("Defeated");
+	
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

@@ -9,6 +9,7 @@
 #include "Interfaces/Fighter.h"
 #include "BossCharacter.generated.h"
 
+class AAIController;
 class UCombatComponent;
 class UBlackboardComponent;
 class UStatsComponent;
@@ -26,6 +27,11 @@ class ACTIONCOMBAT_API ABossCharacter : public ACharacter, public IEnemy, public
 
 	UFUNCTION()
 	void HandlePlayerDeath();
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* DeathAnimMontage;
+
+	AAIController* AIController;
 
 public:
 	// Sets default values for this character's properties
@@ -53,7 +59,7 @@ public:
 
 	UFUNCTION()
 	void DamageReceived(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
-									 AController* InstigatedBy, AActor* DamageCauser);
+	                    AController* InstigatedBy, AActor* DamageCauser);
 
 	UFUNCTION(BlueprintCallable)
 	void DetectPawn(APawn* PawnDetected, APawn* PawnToDetect) const;
@@ -65,4 +71,7 @@ public:
 	virtual float GetAnimDuration() const override;
 
 	virtual float GetMeleeRange() const override;
+
+	UFUNCTION(BlueprintCallable)
+	void HandleDeath();
 };
