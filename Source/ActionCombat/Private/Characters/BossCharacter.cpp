@@ -107,8 +107,16 @@ void ABossCharacter::HandlePlayerDeath()
 
 void ABossCharacter::HandleDeath()
 {
-	PlayAnimMontage(DeathAnimMontage);
+	float DeathAnimationLength{PlayAnimMontage(DeathAnimMontage)};
 	AIController->BrainComponent->StopLogic("Defeated");
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ABossCharacter::AfterDeathAnimation, DeathAnimationLength+2, false);
+}
+
+void ABossCharacter::AfterDeathAnimation()
+{
+	Destroy();
 }
