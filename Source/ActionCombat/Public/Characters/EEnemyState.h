@@ -11,4 +11,5 @@ enum class EEnemyState : uint8
 	Range UMETA(DisplayName = "Range"),
 	Charge UMETA(DisplayName = "Charge"),
 	Melee UMETA(DisplayName = "Melee"),
+	GameOver UMETA(DisplayName = "GameOver"),
 };

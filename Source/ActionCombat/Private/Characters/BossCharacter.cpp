@@ -14,10 +14,10 @@ ABossCharacter::ABossCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
 	ProjectileSpawnPoint->SetupAttachment(RootComponent);
-	
+
 	StatsComponent = CreateDefaultSubobject<UStatsComponent>(TEXT("Stats Component"));
 
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("Combat Component"));
@@ -29,9 +29,15 @@ void ABossCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	OnTakeAnyDamage.AddDynamic(this, &ABossCharacter::DamageReceived);
-	
+
 	BlackboardComponent = GetController<AAIController>()->GetBlackboardComponent();
 	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(InitialState));
+
+	if (APawn* PlayerPawnPtr{GetWorld()->GetFirstPlayerController()->GetPawn()})
+	{
+		PlayerPawnPtr->GetComponentByClass<UStatsComponent>()->OnZeroHealthDelegate
+			  .AddDynamic(this, &ABossCharacter::HandlePlayerDeath);
+	}
 }
 
 // Called every frame
@@ -53,7 +59,7 @@ void ABossCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 // }
 
 void ABossCharacter::DamageReceived(AActor* DamagedActor, float Damage, const class UDamageType* DamageType,
-                                     AController* InstigatedBy, AActor* DamageCauser)
+                                    AController* InstigatedBy, AActor* DamageCauser)
 {
 	StatsComponent->ReduceHealth(Damage);
 }
@@ -87,4 +93,9 @@ float ABossCharacter::GetAnimDuration() const
 float ABossCharacter::GetMeleeRange() const
 {
 	return StatsComponent->Stats[ECharacterStat::MeleeRange];
+}
+
+void ABossCharacter::HandlePlayerDeath()
+{
+	BlackboardComponent->SetValueAsEnum(TEXT("CurrentState"), static_cast<uint8>(EEnemyState::GameOver));
 }
