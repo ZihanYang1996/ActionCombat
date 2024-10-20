@@ -33,4 +33,7 @@ protected:
 public:
 	UFUNCTION(BlueprintCallable)
 	void HandleUpdatedTarget(AActor* NewTarget);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsBlocking{false};
 };
