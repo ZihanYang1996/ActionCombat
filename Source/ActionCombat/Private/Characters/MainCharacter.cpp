@@ -81,3 +81,13 @@ void AMainCharacter::AbortLockon(AActor* TargetActor)
 {
 	LockonComponent->AbortLockon(TargetActor);
 }
+
+void AMainCharacter::StartBlock()
+{
+	PlayerAnimInstance->bIsBlocking = true;
+}
+
+void AMainCharacter::EndBlock()
+{
+	PlayerAnimInstance->bIsBlocking = false;
+}

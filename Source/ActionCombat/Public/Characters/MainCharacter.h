@@ -71,4 +71,10 @@ public:
 	void HandleDeath();
 
 	virtual void AbortLockon(AActor* TargetActor) override;
+
+	UFUNCTION(BlueprintCallable)
+	void StartBlock();
+
+	UFUNCTION(BlueprintCallable)
+	void EndBlock();
 };
