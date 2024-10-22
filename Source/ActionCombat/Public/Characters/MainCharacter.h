@@ -26,6 +26,9 @@ class ACTIONCOMBAT_API AMainCharacter : public ACharacter, public IMainPlayer, p
 
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* DeathAnimMontage;
+
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* HurtAnimMontage;
 	
 public:
 	// Sets default values for this character's properties

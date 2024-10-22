@@ -72,6 +72,7 @@ void AMainCharacter::OnDamageReceived(AActor* DamagedActor, float Damage, const 
 	if (CanTakeDamage(DamageCauser))
 	{
 		StatsComponent->ReduceHealth(Damage);
+		PlayAnimMontage(HurtAnimMontage);
 	}
 }
 

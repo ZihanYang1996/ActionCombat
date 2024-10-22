@@ -36,7 +36,7 @@ void UBlockComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	// ...
 }
 
-bool UBlockComponent::CanBlock(AActor* DamageCauser) const
+bool UBlockComponent::CanBlock(AActor* DamageCauser)
 {
 	// Check if the owner character implements the IMainPlayer interface
 	if (!OwnerCharacter->Implements<UMainPlayer>())
@@ -61,6 +61,9 @@ bool UBlockComponent::CanBlock(AActor* DamageCauser) const
 		// The damage causer is behind the player
 		return false;
 	}
+
+	OnBlockDelegate.Broadcast(StaminaCost);
+	OwnerCharacter->PlayAnimMontage(BlockImpactAnimMontage);
 	
 	return true;
 }

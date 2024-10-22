@@ -4,6 +4,7 @@
 #include "Characters/StatsComponent.h"
 
 #include "Characters/PlayerActionsComponent.h"
+#include "Combat/BlockComponent.h"
 #include "Combat/CombatComponent.h"
 
 // Sets default values for this component's properties
@@ -30,6 +31,11 @@ void UStatsComponent::BeginPlay()
 	if (UPlayerActionsComponent* PlayerActionsComponent = GetOwner()->FindComponentByClass<UPlayerActionsComponent>())
 	{
 		PlayerActionsComponent->OnSprintDelegate.AddDynamic(this, &UStatsComponent::ReduceStamina);
+	}
+
+	if (UBlockComponent* BlockComponent = GetOwner()->GetComponentByClass<UBlockComponent>())
+	{
+		BlockComponent->OnBlockDelegate.AddDynamic(this, &UStatsComponent::ReduceStamina);
 	}
 }
 
