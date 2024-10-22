@@ -55,7 +55,7 @@ void AEnemyProjectile::HandleBeginOverlap(UPrimitiveComponent* OverlappedCompone
 		return;
 	}
 	AController* InstigatorController{GetOwner()->GetInstigatorController()}; 
-	OtherActor->TakeDamage(ProjectileDamage, DamageEvent, InstigatorController, GetOwner());
+	OtherActor->TakeDamage(ProjectileDamage, DamageEvent, InstigatorController, this);
 
 	// Disable the collision
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
