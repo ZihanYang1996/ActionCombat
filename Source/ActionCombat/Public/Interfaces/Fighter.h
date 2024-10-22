@@ -30,4 +30,6 @@ public:
 	virtual float GetAnimDuration() const;
 
 	virtual float GetMeleeRange() const;
+
+	virtual bool CanTakeDamage(AActor* DamageCauser) const;
 };

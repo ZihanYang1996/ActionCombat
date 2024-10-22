@@ -3,6 +3,9 @@
 
 #include "Combat/BlockComponent.h"
 
+#include "GameFramework/Character.h"
+#include "Interfaces/MainPlayer.h"
+
 // Sets default values for this component's properties
 UBlockComponent::UBlockComponent()
 {
@@ -19,6 +22,7 @@ void UBlockComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	OwnerCharacter = GetOwner<ACharacter>();
 	// ...
 	
 }
@@ -30,5 +34,34 @@ void UBlockComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+bool UBlockComponent::CanBlock(AActor* DamageCauser) const
+{
+	// Check if the owner character implements the IMainPlayer interface
+	if (!OwnerCharacter->Implements<UMainPlayer>())
+	{
+		return false;
+	}
+
+	// Check if the owner character has enough stamina to block
+	if (!IMainPlayer::Execute_HasEnoughStamina(OwnerCharacter, StaminaCost))
+	{
+		return false;
+	}
+
+	// Check if the damage causer is in front of the player
+	FVector DirectionToDamageCauser{(DamageCauser->GetActorLocation() - OwnerCharacter->GetActorLocation()).GetSafeNormal()};
+	FVector OwnerForward{OwnerCharacter->GetActorForwardVector()};
+
+	double DotProduct{FVector::DotProduct(DirectionToDamageCauser, OwnerForward)};
+
+	if (DotProduct < 0.0f)
+	{
+		// The damage causer is behind the player
+		return false;
+	}
+	
+	return true;
 }
 

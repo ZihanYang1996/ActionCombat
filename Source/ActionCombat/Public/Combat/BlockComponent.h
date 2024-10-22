@@ -12,6 +12,11 @@ class ACTIONCOMBAT_API UBlockComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+	ACharacter* OwnerCharacter;
+	
+	UPROPERTY(EditAnywhere)
+	float StaminaCost{10.0f};
+
 public:	
 	// Sets default values for this component's properties
 	UBlockComponent();
@@ -24,5 +29,5 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	bool CanBlock(AActor* DamageCauser) const;
 };

@@ -77,4 +77,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void EndBlock();
+
+	virtual bool CanTakeDamage(AActor* DamageCauser) const override;
 };

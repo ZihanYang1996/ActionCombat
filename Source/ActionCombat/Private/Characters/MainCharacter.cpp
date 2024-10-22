@@ -68,7 +68,11 @@ bool AMainCharacter::HasEnoughStamina_Implementation(float StaminaCost)
 void AMainCharacter::OnDamageReceived(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
                                       AController* InstigatedBy, AActor* DamageCauser)
 {
-	StatsComponent->ReduceHealth(Damage);
+	UE_LOG(LogTemp, Warning, TEXT("Damage Causer: %s"), *DamageCauser->GetName());
+	if (CanTakeDamage(DamageCauser))
+	{
+		StatsComponent->ReduceHealth(Damage);
+	}
 }
 
 void AMainCharacter::HandleDeath()
@@ -90,4 +94,13 @@ void AMainCharacter::StartBlock()
 void AMainCharacter::EndBlock()
 {
 	PlayerAnimInstance->bIsBlocking = false;
+}
+
+bool AMainCharacter::CanTakeDamage(AActor* DamageCauser) const
+{
+	if (PlayerAnimInstance->bIsBlocking)
+	{
+		return !BlockComponent->CanBlock(DamageCauser);
+	}
+	return true;
 }

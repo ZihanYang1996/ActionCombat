@@ -23,3 +23,10 @@ float IFighter::GetMeleeRange() const
 {
 	return 0.0f;
 }
+
+bool IFighter::CanTakeDamage(AActor* DamageCauser) const
+{
+	return true;
+}
+
+
