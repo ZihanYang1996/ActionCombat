@@ -31,6 +31,7 @@ void UStatsComponent::BeginPlay()
 	if (UPlayerActionsComponent* PlayerActionsComponent = GetOwner()->FindComponentByClass<UPlayerActionsComponent>())
 	{
 		PlayerActionsComponent->OnSprintDelegate.AddDynamic(this, &UStatsComponent::ReduceStamina);
+		PlayerActionsComponent->OnRollDelegate.AddDynamic(this, &UStatsComponent::ReduceStamina);
 	}
 
 	if (UBlockComponent* BlockComponent = GetOwner()->GetComponentByClass<UBlockComponent>())

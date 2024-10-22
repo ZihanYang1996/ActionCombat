@@ -24,16 +24,18 @@ void UPlayerActionsComponent::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 
-	CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();  // Or GetComponentByClass<UCharacterMovementComponent>();
+	CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();
+	// Or GetComponentByClass<UCharacterMovementComponent>();
 	if (CharacterMovementComponent)
 	{
-		DefaultMaxWalkSpeed = CharacterMovementComponent->MaxWalkSpeed;  // Assign the actual value of MaxWalkSpeed
+		DefaultMaxWalkSpeed = CharacterMovementComponent->MaxWalkSpeed; // Assign the actual value of MaxWalkSpeed
 	}
 }
 
 
 // Called every frame
-void UPlayerActionsComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UPlayerActionsComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                            FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -62,4 +64,37 @@ void UPlayerActionsComponent::Sprinting()
 void UPlayerActionsComponent::StopSprinting()
 {
 	CharacterMovementComponent->MaxWalkSpeed = DefaultMaxWalkSpeed;
+}
+
+void UPlayerActionsComponent::Roll()
+{
+	if (bIsRolling || !IMainPlayer::Execute_HasEnoughStamina(OwnerCharacter, RollStaminaCost))
+	{
+		return;
+	}
+
+	bIsRolling = true;
+
+	OnRollDelegate.Broadcast(RollStaminaCost);
+
+	// Calculate the direction of the roll
+	FVector Direction{
+		OwnerCharacter->GetCharacterMovement()->Velocity.Length() > 1.0f
+			? OwnerCharacter->GetCharacterMovement()->Velocity.GetSafeNormal()
+			: OwnerCharacter->GetActorForwardVector()  // Kind of like monster hunter, you have to face the direction you want to roll
+	};
+
+	FRotator NewRotation{Direction.Rotation()};
+
+	OwnerCharacter->SetActorRotation(NewRotation);
+
+	float Duration{OwnerCharacter->PlayAnimMontage(RollAnimMontage)};
+
+	auto ResetRollingLambda = [this]()
+	{
+		bIsRolling = false;
+	};
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, ResetRollingLambda, Duration, false);
 }

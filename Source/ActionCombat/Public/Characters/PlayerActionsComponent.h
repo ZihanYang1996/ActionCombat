@@ -13,6 +13,9 @@ class IMainPlayer;
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnSprintSignature, UPlayerActionsComponent, OnSprintDelegate, float,
                                                    StaminaCost);
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnRollSignature, UPlayerActionsComponent, OnRollDelegate, float,
+                                                   StaminaCost);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API UPlayerActionsComponent : public UActorComponent
 {
@@ -31,12 +34,21 @@ class ACTIONCOMBAT_API UPlayerActionsComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere)
 	float DefaultMaxWalkSpeed{500.0f}; // Temporarily set to 500.0f, will assign the actual value in BeginPlay
 
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* RollAnimMontage;
+
+	UPROPERTY(EditAnywhere)
+	float RollStaminaCost{5.0f};
+
+	bool bIsRolling{false};
+
 public:
 	// Sets default values for this component's properties
 	UPlayerActionsComponent();
 
 	FOnSprintSignature OnSprintDelegate;
 
+	FOnRollSignature OnRollDelegate;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -51,4 +63,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StopSprinting();
+
+	UFUNCTION(BlueprintCallable)
+	void Roll();
 };
