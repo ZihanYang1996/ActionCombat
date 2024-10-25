@@ -51,6 +51,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UPlayerActionsComponent* PlayerActionsComponent;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShakeBase> HitShake;
 	
 protected:
 	// Called when the game starts or when spawned

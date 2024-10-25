@@ -73,6 +73,7 @@ void AMainCharacter::OnDamageReceived(AActor* DamagedActor, float Damage, const 
 	{
 		StatsComponent->ReduceHealth(Damage);
 		PlayAnimMontage(HurtAnimMontage);
+		GetController<APlayerController>()->PlayerCameraManager->StartCameraShake(HitShake);
 	}
 }
 
