@@ -6,7 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnAttackPerformedSignature, UCombatComponent, OnAttackPerformedDelegate, float, AttackStaminaCost);
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FOnAttackPerformedSignature, UCombatComponent,
+                                                   OnAttackPerformedDelegate, float, AttackStaminaCost);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
@@ -26,7 +27,9 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 	bool bCanContinueCombo{false};
 
 	bool bIsAttacking{false};
-	
+
+	bool bCanTakeInput{true};
+
 	UPROPERTY(EditAnywhere)
 	float ComboWindowTime{0.5f};
 
@@ -42,6 +45,8 @@ public:
 	void ResetCombo();
 
 	FOnAttackPerformedSignature OnAttackPerformedDelegate;
+
+	bool CanTakeINput() const { return bCanTakeInput; };
 
 protected:
 	// Called when the game starts

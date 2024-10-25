@@ -84,4 +84,6 @@ public:
 	virtual bool CanTakeDamage(AActor* DamageCauser) const override;
 
 	virtual bool CanTakeInput() override;
+
+	virtual void InputReset() override;
 };

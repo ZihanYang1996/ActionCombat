@@ -60,6 +60,7 @@ void UCombatComponent::CombatAttack()
 	{
 		// Set the attacking flag to true, to prevent the player from attacking again
 		bIsAttacking = true;
+		bCanTakeInput = false;
 
 		// If the player has enough stamina, reduce the stamina
 		OnAttackPerformedDelegate.Broadcast(AttackStaminaCost);
@@ -79,6 +80,8 @@ void UCombatComponent::EnableComboContinuation()
 void UCombatComponent::ResetCombo()
 {
 	// Reset the combo
+	bIsAttacking = false;  // Reset the attacking flag
+	bCanTakeInput = true;  // Allow the player to take input
 	bCanContinueCombo = false;
 	// CurrentAttackMontageIndex = 0;
 }

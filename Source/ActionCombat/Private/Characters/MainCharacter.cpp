@@ -121,3 +121,9 @@ bool AMainCharacter::CanTakeInput()
 
 	return true;
 }
+
+void AMainCharacter::InputReset()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Input Reset"));
+	CombatComponent->ResetCombo();
+}
