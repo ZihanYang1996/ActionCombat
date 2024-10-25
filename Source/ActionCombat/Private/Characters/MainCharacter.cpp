@@ -99,8 +99,14 @@ void AMainCharacter::EndBlock()
 
 bool AMainCharacter::CanTakeDamage(AActor* DamageCauser) const
 {
+	if (PlayerActionsComponent->bIsInvincible)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Attack dodged"));
+		return false;
+	}
 	if (PlayerAnimInstance->bIsBlocking)
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Attack blocked"));
 		return !BlockComponent->CanBlock(DamageCauser);
 	}
 	return true;

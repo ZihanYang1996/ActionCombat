@@ -42,6 +42,9 @@ class ACTIONCOMBAT_API UPlayerActionsComponent : public UActorComponent
 
 	bool bIsRolling{false};
 
+	UPROPERTY(EditAnywhere)
+	float InvincibilityDuration{1.0f};
+
 public:
 	// Sets default values for this component's properties
 	UPlayerActionsComponent();
@@ -49,6 +52,8 @@ public:
 	FOnSprintSignature OnSprintDelegate;
 
 	FOnRollSignature OnRollDelegate;
+
+	bool bIsInvincible{false};
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

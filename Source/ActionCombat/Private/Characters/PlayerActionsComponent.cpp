@@ -74,6 +74,7 @@ void UPlayerActionsComponent::Roll()
 	}
 
 	bIsRolling = true;
+	bIsInvincible = true;
 
 	OnRollDelegate.Broadcast(RollStaminaCost);
 
@@ -95,6 +96,13 @@ void UPlayerActionsComponent::Roll()
 		bIsRolling = false;
 	};
 
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, ResetRollingLambda, Duration, false);
+	auto ResetInvincibilityLambda = [this]()
+	{
+		bIsInvincible = false;
+	};
+
+	FTimerHandle RollingTimerHandle;
+	FTimerHandle InvincibilityTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(RollingTimerHandle, ResetRollingLambda, Duration, false);
+	GetWorld()->GetTimerManager().SetTimer(InvincibilityTimerHandle, ResetInvincibilityLambda, InvincibilityDuration, false);
 }
