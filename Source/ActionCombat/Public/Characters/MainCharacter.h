@@ -82,4 +82,6 @@ public:
 	void EndBlock();
 
 	virtual bool CanTakeDamage(AActor* DamageCauser) const override;
+
+	virtual bool CanTakeInput() override;
 };

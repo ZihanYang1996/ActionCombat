@@ -4,6 +4,7 @@
 #include "Characters/PlayerActionsComponent.h"
 
 #include "Characters/MainCharacter.h"
+#include "Combat/CombatComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
@@ -23,7 +24,7 @@ void UPlayerActionsComponent::BeginPlay()
 	Super::BeginPlay();
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
-
+	
 	CharacterMovementComponent = OwnerCharacter->GetCharacterMovement();
 	// Or GetComponentByClass<UCharacterMovementComponent>();
 	if (CharacterMovementComponent)
@@ -68,6 +69,10 @@ void UPlayerActionsComponent::StopSprinting()
 
 void UPlayerActionsComponent::Roll()
 {
+	if (!Cast<IMainPlayer>(OwnerCharacter)->CanTakeInput())
+	{
+		return;
+	}
 	if (bIsRolling || !IMainPlayer::Execute_HasEnoughStamina(OwnerCharacter, RollStaminaCost))
 	{
 		return;

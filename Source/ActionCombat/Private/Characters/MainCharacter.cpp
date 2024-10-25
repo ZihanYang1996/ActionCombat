@@ -111,3 +111,13 @@ bool AMainCharacter::CanTakeDamage(AActor* DamageCauser) const
 	}
 	return true;
 }
+
+bool AMainCharacter::CanTakeInput()
+{
+	if (!CombatComponent->CanTakeINput())
+	{
+		return false;
+	}
+
+	return true;
+}
