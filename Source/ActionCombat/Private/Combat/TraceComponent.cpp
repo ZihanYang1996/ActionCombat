@@ -137,6 +137,17 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		// HitActor->TakeDamage(CharacterDamage, DamageEvent, InstigatorController, GetOwner());
 		UGameplayStatics::ApplyDamage(HitActor, CharacterDamage, InstigatorController, GetOwner(),
 		                              UDamageType::StaticClass());
+
+		// Add blood particles
+		if (HitParticleTemplate)
+		{
+			FVector Location{HitResult.ImpactPoint};
+			FRotator Rotation{HitResult.ImpactNormal.Rotation()};
+			Rotation.Pitch += 90.0f;
+			UGameplayStatics::SpawnEmitterAttached(HitParticleTemplate, HitResult.GetComponent(), NAME_None, Location,
+			                                       Rotation, EAttachLocation::KeepWorldPosition,
+			                                       true);
+		}
 	}
 }
 

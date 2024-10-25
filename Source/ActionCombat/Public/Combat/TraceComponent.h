@@ -33,6 +33,9 @@ class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 	UPROPERTY(VisibleAnywhere)
 	bool bIsAttacking{false};
 
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* HitParticleTemplate;
+
 public:
 	// Sets default values for this component's properties
 	UTraceComponent();
