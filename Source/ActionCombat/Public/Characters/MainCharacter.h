@@ -89,4 +89,6 @@ public:
 	virtual bool CanTakeInput() override;
 
 	virtual void InputReset() override;
+
+	void StartHitPause(float Duration, float Ratio);
 };

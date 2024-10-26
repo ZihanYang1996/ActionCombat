@@ -48,6 +48,8 @@ public:
 
 	bool CanTakeINput() const { return bCanTakeInput; };
 
+	UAnimMontage* GetCurrentAttackMontage() const { return AttackMontages[CurrentAttackMontageIndex]; };
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

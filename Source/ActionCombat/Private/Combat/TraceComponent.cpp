@@ -3,6 +3,7 @@
 
 #include "Combat/TraceComponent.h"
 
+#include "Characters/MainCharacter.h"
 #include "Engine/DamageEvents.h"
 #include "Interfaces/Fighter.h"
 #include "Kismet/GameplayStatics.h"
@@ -148,6 +149,9 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			                                       Rotation, EAttachLocation::KeepWorldPosition,
 			                                       true);
 		}
+
+		// Apply hit pause
+		GetOwner<AMainCharacter>()->StartHitPause(0.5, 0.1);
 	}
 }
 

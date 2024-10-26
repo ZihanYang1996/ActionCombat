@@ -128,3 +128,21 @@ void AMainCharacter::InputReset()
 	UE_LOG(LogTemp, Warning, TEXT("Input Reset"));
 	CombatComponent->ResetCombo();
 }
+
+void AMainCharacter::StartHitPause(float Duration, float Ratio)
+{
+	if (PlayerAnimInstance)
+	{
+		UAnimMontage* CurrentMontage{PlayerAnimInstance->GetCurrentActiveMontage()};
+		if (PlayerAnimInstance->Montage_IsPlaying(CurrentMontage))
+		{
+			PlayerAnimInstance->Montage_SetPlayRate(CurrentMontage, Ratio);
+
+			FTimerHandle HitPauseTimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(HitPauseTimerHandle, [this, CurrentMontage]()
+			{
+				PlayerAnimInstance->Montage_SetPlayRate(CurrentMontage, 1.0f);
+			}, Duration, false);
+		}
+	}
+}
