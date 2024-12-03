@@ -142,12 +142,23 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		// Add blood particles
 		if (HitParticleTemplate)
 		{
-			FVector Location{HitResult.ImpactPoint};
-			FRotator Rotation{HitResult.ImpactNormal.Rotation()};
-			Rotation.Pitch += 90.0f;
-			UGameplayStatics::SpawnEmitterAttached(HitParticleTemplate, HitResult.GetComponent(), NAME_None, Location,
-			                                       Rotation, EAttachLocation::KeepWorldPosition,
-			                                       true);
+			// Only play the particle effect if the HitActor is of type Fighter
+			// and the HitActor can take damage
+			if (IFighter* HitActorFighter{Cast<IFighter>(HitActor)})
+			{
+				
+				if (!HitActorFighter->CanTakeDamage(GetOwner()))
+				{
+					continue;
+				}
+				FVector Location{HitResult.ImpactPoint};
+				FRotator Rotation{HitResult.ImpactNormal.Rotation()};
+				Rotation.Pitch += 90.0f;
+				UGameplayStatics::SpawnEmitterAttached(HitParticleTemplate, HitResult.GetComponent(), NAME_None, Location,
+													   Rotation, EAttachLocation::KeepWorldPosition,
+													   true);
+			}
+
 		}
 
 		// Apply hit pause
