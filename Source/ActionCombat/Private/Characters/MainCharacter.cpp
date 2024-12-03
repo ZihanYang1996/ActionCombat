@@ -31,6 +31,10 @@ void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (!TraceComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Trace Component not found"));
+	}
 	// Get Animation Instance
 	PlayerAnimInstance = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
 

@@ -151,7 +151,12 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		}
 
 		// Apply hit pause
-		GetOwner<AMainCharacter>()->StartHitPause(0.1, 0.05);
+		// GetOwner<AMainCharacter>()->StartHitPause(0.1, 0.05);
+		// Only call StartHitPause if the owner is a MainCharacter
+		if (AMainCharacter* MainCharacter{Cast<AMainCharacter>(GetOwner())})
+		{
+			MainCharacter->StartHitPause(0.1, 0.05);
+		}
 	}
 }
 
