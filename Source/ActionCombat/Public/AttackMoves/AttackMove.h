@@ -16,4 +16,5 @@ class ACTIONCOMBAT_API UAttackMove : public UObject
 
 public:
 	virtual void Execute(class ACharacter* Character, float& Duration) const {};
+	virtual void Setup() {};
 };

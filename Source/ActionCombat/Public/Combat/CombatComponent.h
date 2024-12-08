@@ -20,6 +20,8 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UAttackMove>> AttackMoves;
+	
+	TArray<UAttackMove*> AttackMoveInstances;
 
 	ACharacter* OwnerCharacter;
 

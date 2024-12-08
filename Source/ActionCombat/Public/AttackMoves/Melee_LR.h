@@ -15,8 +15,15 @@ class ACTIONCOMBAT_API UMelee_LR : public UAttackMove
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	UAnimMontage* Melee_L_Montage;
+	UAnimMontage* PreAttack;
+	
+	UPROPERTY(EditAnywhere)
+	UAnimMontage* Attack;
+
+	float TotalDuration;
 
 public:
 	virtual void Execute(class ACharacter* Character, float& Duration) const override;
+
+	virtual void Setup() override;
 };

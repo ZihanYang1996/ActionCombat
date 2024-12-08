@@ -24,6 +24,14 @@ void UCombatComponent::BeginPlay()
 
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	MaxAttackMontageIndex = AttackMontages.Num();
+
+	// Initialize and set up the attack moves
+	for (TSubclassOf<UAttackMove> AttackMove : AttackMoves)
+	{
+		UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMove)};
+		AttackInstance->Setup();
+		AttackMoveInstances.Add(AttackInstance);
+	}
 }
 
 
@@ -90,10 +98,9 @@ void UCombatComponent::AIAttack()
 {
 	int RandomIndex{FMath::RandRange(0, AttackMoves.Num() - 1)};
 	
-	if (UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMoves[RandomIndex])})
+	if (AttackMoveInstances.IsValidIndex(RandomIndex))
 	{
-		AttackInstance->Execute(OwnerCharacter, AnimDuration);
+		UE_LOG(LogTemp, Warning, TEXT("%d"), RandomIndex);
+		AttackMoveInstances[RandomIndex]->Execute(OwnerCharacter, AnimDuration);
 	}
-	
-	
 }

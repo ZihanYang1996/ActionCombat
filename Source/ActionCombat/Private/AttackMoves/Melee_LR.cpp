@@ -3,9 +3,25 @@
 
 #include "AttackMoves/Melee_LR.h"
 
+#include "Animations/ContinueAttackNotify.h"
 #include "GameFramework/Character.h"
 
 void UMelee_LR::Execute(ACharacter* Character, float& Duration) const
 {
-	Duration = Character->PlayAnimMontage(Melee_L_Montage);
+	Duration = TotalDuration;
+	Character->PlayAnimMontage(PreAttack);
+}
+
+void UMelee_LR::Setup()
+{
+	const TArray<FAnimNotifyEvent>& NotifyEvents{PreAttack->Notifies};
+	for (const FAnimNotifyEvent& NotifyEvent : NotifyEvents)
+	{
+		if (UContinueAttackNotify* Notify{Cast<UContinueAttackNotify>(NotifyEvent.Notify)})
+		{
+			Notify->SetNetMontage(Attack);
+		}
+	}
+
+	TotalDuration = PreAttack->GetPlayLength() + Attack->GetPlayLength();
 }
