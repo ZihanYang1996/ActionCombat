@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttackMoves/AttackMove.h"
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
@@ -16,6 +17,9 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 
 	UPROPERTY(EditAnywhere)
 	TArray<UAnimMontage*> AttackMontages;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UAttackMove>> AttackMoves;
 
 	ACharacter* OwnerCharacter;
 
@@ -63,7 +67,7 @@ public:
 	void CombatAttack();
 
 	UFUNCTION(BlueprintCallable)
-	void RandomAttack();
+	void AIAttack();
 
 	float AnimDuration{0.0f};
 };

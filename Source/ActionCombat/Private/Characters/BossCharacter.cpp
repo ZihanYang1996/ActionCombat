@@ -88,7 +88,7 @@ float ABossCharacter::GetDamage()
 
 void ABossCharacter::Attack()
 {
-	CombatComponent->RandomAttack();
+	CombatComponent->AIAttack();
 }
 
 float ABossCharacter::GetAnimDuration() const

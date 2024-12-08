@@ -9,6 +9,10 @@
 void UTraceNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration,
                                     const FAnimNotifyEventReference& EventReference)
 {
+	if (!IsValid(MeshComp->GetOwner()))
+	{
+		return;
+	}
 	if (UTraceComponent* TraceComp = MeshComp->GetOwner()->GetComponentByClass<UTraceComponent>())
 	{
 		TraceComp->TraceStart();
@@ -18,6 +22,10 @@ void UTraceNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSeque
 void UTraceNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                   const FAnimNotifyEventReference& EventReference)
 {
+	if (!IsValid(MeshComp->GetOwner()))
+	{
+		return;
+	}
 	if (UTraceComponent* TraceComp = MeshComp->GetOwner()->GetComponentByClass<UTraceComponent>())
 	{
 		TraceComp->TraceReset();

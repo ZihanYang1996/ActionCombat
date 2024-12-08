@@ -79,15 +79,21 @@ void UCombatComponent::EnableComboContinuation()
 
 void UCombatComponent::ResetCombo()
 {
-	// Reset the combo
+	// Reset the combo 
 	bIsAttacking = false;  // Reset the attacking flag
 	bCanTakeInput = true;  // Allow the player to take input
 	bCanContinueCombo = false;
 	// CurrentAttackMontageIndex = 0;
 }
 
-void UCombatComponent::RandomAttack()
+void UCombatComponent::AIAttack()
 {
-	int RandomIndex{FMath::RandRange(0, AttackMontages.Num() - 1)};
-	AnimDuration = OwnerCharacter->PlayAnimMontage(AttackMontages[RandomIndex]);
+	int RandomIndex{FMath::RandRange(0, AttackMoves.Num() - 1)};
+	
+	if (UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMoves[RandomIndex])})
+	{
+		AttackInstance->Execute(OwnerCharacter, AnimDuration);
+	}
+	
+	
 }
