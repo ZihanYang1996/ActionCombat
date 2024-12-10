@@ -91,6 +91,16 @@ void ABossCharacter::MeleeAttack()
 	CombatComponent->AIMeleeAttack();
 }
 
+void ABossCharacter::RangedAttack()
+{
+	CombatComponent->AIRangedAttack();
+}
+
+void ABossCharacter::ChargeAttack()
+{
+	CombatComponent->AIChargeAttack();
+}
+
 float ABossCharacter::GetAnimDuration() const
 {
 	return CombatComponent->AnimDuration;

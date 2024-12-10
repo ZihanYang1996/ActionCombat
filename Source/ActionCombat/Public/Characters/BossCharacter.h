@@ -68,6 +68,10 @@ public:
 
 	virtual void MeleeAttack() override;
 
+	virtual void RangedAttack() override;
+
+	virtual void ChargeAttack() override;
+
 	virtual float GetAnimDuration() const override;
 
 	virtual float GetMeleeRange() const override;

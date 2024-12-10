@@ -19,9 +19,19 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 	TArray<UAnimMontage*> AttackMontages;
 
 	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<UAttackMove>> AttackMoves;
+	TArray<TSubclassOf<UAttackMove>> MeleeAttackMoves;
 	
-	TArray<UAttackMove*> AttackMoveInstances;
+	TArray<UAttackMove*> MeleeAttackMoveInstances;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UAttackMove>> RangedAttackMoves;
+	
+	TArray<UAttackMove*> RangedAttackMoveInstances;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UAttackMove>> ChargeAttackMoves;
+	
+	TArray<UAttackMove*> ChargeAttackMoveInstances;
 
 	ACharacter* OwnerCharacter;
 
@@ -41,6 +51,8 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 
 	UPROPERTY(EditAnywhere)
 	float AttackStaminaCost{5.0f};
+
+	void ExecuteRandomAttack(TArray<UAttackMove*> AttackMoveInstances);
 
 public:
 	// Sets default values for this component's properties
@@ -71,5 +83,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AIMeleeAttack();
 
+	UFUNCTION(BlueprintCallable)
+	void AIRangedAttack();
+
+	UFUNCTION(BlueprintCallable)
+	void AIChargeAttack();
+		
 	float AnimDuration{0.0f};
 };

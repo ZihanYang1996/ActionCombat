@@ -25,13 +25,32 @@ void UCombatComponent::BeginPlay()
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	MaxAttackMontageIndex = AttackMontages.Num();
 
-	// Initialize and set up the attack moves
-	for (TSubclassOf<UAttackMove> AttackMove : AttackMoves)
+	// Initialize and set up the melee attack moves
+	for (TSubclassOf<UAttackMove> AttackMove : MeleeAttackMoves)
 	{
 		UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMove)};
 		AttackInstance->Setup();
-		AttackMoveInstances.Add(AttackInstance);
+		MeleeAttackMoveInstances.Add(AttackInstance);
 	}
+
+	// Initialize and set up the ranged attack moves
+	for (TSubclassOf<UAttackMove> AttackMove : RangedAttackMoves)
+	{
+		UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMove)};
+		AttackInstance->Setup();
+		RangedAttackMoveInstances.Add(AttackInstance);
+	}
+
+	// Initialize and set up the charge attack moves
+	for (TSubclassOf<UAttackMove> AttackMove : ChargeAttackMoves)
+	{
+		UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMove)};
+		AttackInstance->Setup();
+		ChargeAttackMoveInstances.Add(AttackInstance);
+	}
+
+	
+	
 }
 
 
@@ -94,9 +113,10 @@ void UCombatComponent::ResetCombo()
 	// CurrentAttackMontageIndex = 0;
 }
 
-void UCombatComponent::AIMeleeAttack()
+
+void UCombatComponent::ExecuteRandomAttack(TArray<UAttackMove*> AttackMoveInstances)
 {
-	int RandomIndex{FMath::RandRange(0, AttackMoves.Num() - 1)};
+	int RandomIndex{FMath::RandRange(0, AttackMoveInstances.Num() - 1)};
 	
 	if (AttackMoveInstances.IsValidIndex(RandomIndex))
 	{
@@ -104,3 +124,22 @@ void UCombatComponent::AIMeleeAttack()
 		AttackMoveInstances[RandomIndex]->Execute(OwnerCharacter, AnimDuration);
 	}
 }
+
+
+void UCombatComponent::AIMeleeAttack()
+{
+	ExecuteRandomAttack(MeleeAttackMoveInstances);
+}
+
+void UCombatComponent::AIRangedAttack()
+{
+	ExecuteRandomAttack(RangedAttackMoveInstances);
+}
+
+void UCombatComponent::AIChargeAttack()
+{
+	ExecuteRandomAttack(ChargeAttackMoveInstances);
+}
+
+
+

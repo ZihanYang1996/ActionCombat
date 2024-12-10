@@ -27,6 +27,10 @@ public:
 
 	virtual void MeleeAttack();
 
+	virtual void RangedAttack();
+
+	virtual void ChargeAttack();
+
 	virtual float GetAnimDuration() const;
 
 	virtual float GetMeleeRange() const;

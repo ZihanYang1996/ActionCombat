@@ -14,6 +14,14 @@ void IFighter::MeleeAttack()
 {
 }
 
+void IFighter::RangedAttack()
+{
+}
+
+void IFighter::ChargeAttack()
+{
+}
+
 float IFighter::GetAnimDuration() const
 {
 	return 0.0f;

@@ -20,6 +20,10 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 
 	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
 	IFighter* FighterInterfacePtr{Cast<IFighter>(CharacterRef)};
+	if (!FighterInterfacePtr)
+	{
+		return EBTNodeResult::Failed;
+	}
 	if (DistanceToPlayer < FighterInterfacePtr->GetMeleeRange())
 	{
 		OwnerComp.GetBlackboardComponent()->SetValueAsEnum(
@@ -28,7 +32,7 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		return EBTNodeResult::Aborted;
 	}
 	
-	CharacterRef->PlayAnimMontage(RangedAttack);
+	FighterInterfacePtr->RangedAttack();
 
 	// Generate a random number between 0 and 1
 	const float RandomValue{FMath::FRand()};
