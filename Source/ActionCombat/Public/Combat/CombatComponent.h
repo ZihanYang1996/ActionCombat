@@ -69,7 +69,7 @@ public:
 	void CombatAttack();
 
 	UFUNCTION(BlueprintCallable)
-	void AIAttack();
+	void AIMeleeAttack();
 
 	float AnimDuration{0.0f};
 };

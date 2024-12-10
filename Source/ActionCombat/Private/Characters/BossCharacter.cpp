@@ -86,9 +86,9 @@ float ABossCharacter::GetDamage()
 	return StatsComponent->Stats[ECharacterStat::Strength];
 }
 
-void ABossCharacter::Attack()
+void ABossCharacter::MeleeAttack()
 {
-	CombatComponent->AIAttack();
+	CombatComponent->AIMeleeAttack();
 }
 
 float ABossCharacter::GetAnimDuration() const

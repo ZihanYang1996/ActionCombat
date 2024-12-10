@@ -10,7 +10,7 @@ float IFighter::GetDamage()
 	return 0.0f;
 }
 
-void IFighter::Attack()
+void IFighter::MeleeAttack()
 {
 }
 

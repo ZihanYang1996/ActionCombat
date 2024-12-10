@@ -13,7 +13,7 @@
 
 UBTT_MeleeAttack::UBTT_MeleeAttack()
 {
-	NodeName = TEXT("Melee Attack");
+	NodeName = TEXT("Melee MeleeAttack");
 	bNotifyTick = true;
 }
 
@@ -46,7 +46,7 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		IFighter* FighterInterfacePtr{Cast<IFighter>(OwnerComp.GetAIOwner()->GetCharacter())};
 		if (FighterInterfacePtr)
 		{
-			FighterInterfacePtr->Attack();
+			FighterInterfacePtr->MeleeAttack();
 			float AnimDuration{FighterInterfacePtr->GetAnimDuration()};
 			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_MeleeAttack::FinishAttackTask, AnimDuration,
 			                                       false);

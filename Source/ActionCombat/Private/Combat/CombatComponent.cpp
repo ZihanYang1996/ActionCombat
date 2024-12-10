@@ -94,7 +94,7 @@ void UCombatComponent::ResetCombo()
 	// CurrentAttackMontageIndex = 0;
 }
 
-void UCombatComponent::AIAttack()
+void UCombatComponent::AIMeleeAttack()
 {
 	int RandomIndex{FMath::RandRange(0, AttackMoves.Num() - 1)};
 	

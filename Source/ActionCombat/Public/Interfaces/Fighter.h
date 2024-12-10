@@ -25,7 +25,7 @@ public:
 
 	virtual float GetDamage();
 
-	virtual void Attack();
+	virtual void MeleeAttack();
 
 	virtual float GetAnimDuration() const;
 
