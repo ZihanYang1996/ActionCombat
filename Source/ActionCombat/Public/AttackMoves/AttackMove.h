@@ -15,6 +15,6 @@ class ACTIONCOMBAT_API UAttackMove : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Execute(class ACharacter* Character, float& Duration) const {};
-	virtual void Setup() {};
+	virtual void Execute(class ACharacter* Character, float& Duration) {};
+	virtual void Setup(ACharacter* AttackingCharacter) {};
 };

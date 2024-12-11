@@ -23,7 +23,7 @@ class ACTIONCOMBAT_API UMelee_LR : public UAttackMove
 	float TotalDuration;
 
 public:
-	virtual void Execute(class ACharacter* Character, float& Duration) const override;
+	virtual void Execute(class ACharacter* Character, float& Duration) override;
 
-	virtual void Setup() override;
+	virtual void Setup(ACharacter* AttackingCharacter) override;
 };

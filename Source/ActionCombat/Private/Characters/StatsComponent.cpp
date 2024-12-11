@@ -81,7 +81,7 @@ void UStatsComponent::ReduceStamina(float Amount)
 {
 	Stats[ECharacterStat::Stamina] = FMath::Clamp((Stats[ECharacterStat::Stamina] - Amount), 0.0f,
 	                                              Stats[ECharacterStat::MaxStamina]);
-	UE_LOG(LogTemp, Warning, TEXT("Stamina reduced to %f"), Stats[ECharacterStat::Stamina]);
+	// UE_LOG(LogTemp, Warning, TEXT("Stamina reduced to %f"), Stats[ECharacterStat::Stamina]);
 
 	bCanStaminaRegen = false;
 	

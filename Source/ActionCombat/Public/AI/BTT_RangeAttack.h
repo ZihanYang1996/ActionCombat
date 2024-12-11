@@ -17,5 +17,6 @@ class ACTIONCOMBAT_API UBTT_RangeAttack : public UBTTaskNode
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	UPROPERTY(EditAnywhere)
-	float ChargeAttackTransitionThreshold{0.9f};
+	float ChargeAttackTransitionThreshold{0.0f};
+	float CurrentChargeAttackTransitionThreshold{ChargeAttackTransitionThreshold};
 };

@@ -21,17 +21,17 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UAttackMove>> MeleeAttackMoves;
 	
-	TArray<UAttackMove*> MeleeAttackMoveInstances;
+	TArray<UAttackMove*> MeleeAttackMoveInstances{};
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UAttackMove>> RangedAttackMoves;
 	
-	TArray<UAttackMove*> RangedAttackMoveInstances;
+	TArray<UAttackMove*> RangedAttackMoveInstances{};
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UAttackMove>> ChargeAttackMoves;
 	
-	TArray<UAttackMove*> ChargeAttackMoveInstances;
+	TArray<UAttackMove*> ChargeAttackMoveInstances{};
 
 	ACharacter* OwnerCharacter;
 
@@ -52,7 +52,7 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 	UPROPERTY(EditAnywhere)
 	float AttackStaminaCost{5.0f};
 
-	void ExecuteRandomAttack(TArray<UAttackMove*> AttackMoveInstances);
+	void ExecuteRandomAttack(const TArray<UAttackMove*>& AttackMoveInstances);
 
 public:
 	// Sets default values for this component's properties

@@ -6,13 +6,13 @@
 #include "Animations/ContinueAttackNotify.h"
 #include "GameFramework/Character.h"
 
-void UMelee_LR::Execute(ACharacter* Character, float& Duration) const
+void UMelee_LR::Execute(ACharacter* Character, float& Duration)
 {
 	Duration = TotalDuration;
 	Character->PlayAnimMontage(PreAttack);
 }
 
-void UMelee_LR::Setup()
+void UMelee_LR::Setup(ACharacter* AttackingCharacter)
 {
 	const TArray<FAnimNotifyEvent>& NotifyEvents{PreAttack->Notifies};
 	for (const FAnimNotifyEvent& NotifyEvent : NotifyEvents)

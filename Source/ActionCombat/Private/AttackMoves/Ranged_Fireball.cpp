@@ -5,12 +5,12 @@
 
 #include "GameFramework/Character.h"
 
-void URanged_Fireball::Setup()
+void URanged_Fireball::Setup(ACharacter* AttackingCharacter)
 {
 	
 }
 
-void URanged_Fireball::Execute(ACharacter* Character, float& Duration) const
+void URanged_Fireball::Execute(ACharacter* Character, float& Duration)
 {
 	Character->PlayAnimMontage(RangedAttack);	
 }

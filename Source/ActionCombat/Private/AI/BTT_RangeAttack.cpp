@@ -36,10 +36,10 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 
 	// Generate a random number between 0 and 1
 	const float RandomValue{FMath::FRand()};
-	if (RandomValue > ChargeAttackTransitionThreshold)
+	if (RandomValue > CurrentChargeAttackTransitionThreshold)
 	{
 		// Reset the threshold
-		ChargeAttackTransitionThreshold = 0.9f;
+		CurrentChargeAttackTransitionThreshold = ChargeAttackTransitionThreshold;
 
 		// Transition to the charge attack
 		OwnerComp.GetBlackboardComponent()->SetValueAsEnum(
@@ -48,7 +48,7 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	else
 	{
 		// Decrease the threshold
-		ChargeAttackTransitionThreshold -= 0.1f;
+		CurrentChargeAttackTransitionThreshold -= 0.1f;
 	}
 	return EBTNodeResult::Succeeded;
 }

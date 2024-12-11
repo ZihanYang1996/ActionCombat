@@ -29,7 +29,7 @@ void UCombatComponent::BeginPlay()
 	for (TSubclassOf<UAttackMove> AttackMove : MeleeAttackMoves)
 	{
 		UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMove)};
-		AttackInstance->Setup();
+		AttackInstance->Setup(OwnerCharacter);
 		MeleeAttackMoveInstances.Add(AttackInstance);
 	}
 
@@ -37,7 +37,7 @@ void UCombatComponent::BeginPlay()
 	for (TSubclassOf<UAttackMove> AttackMove : RangedAttackMoves)
 	{
 		UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMove)};
-		AttackInstance->Setup();
+		AttackInstance->Setup(OwnerCharacter);
 		RangedAttackMoveInstances.Add(AttackInstance);
 	}
 
@@ -45,7 +45,7 @@ void UCombatComponent::BeginPlay()
 	for (TSubclassOf<UAttackMove> AttackMove : ChargeAttackMoves)
 	{
 		UAttackMove* AttackInstance{NewObject<UAttackMove>(this, AttackMove)};
-		AttackInstance->Setup();
+		AttackInstance->Setup(OwnerCharacter);
 		ChargeAttackMoveInstances.Add(AttackInstance);
 	}
 
@@ -114,13 +114,17 @@ void UCombatComponent::ResetCombo()
 }
 
 
-void UCombatComponent::ExecuteRandomAttack(TArray<UAttackMove*> AttackMoveInstances)
+void UCombatComponent::ExecuteRandomAttack(const TArray<UAttackMove*>& AttackMoveInstances)
 {
 	int RandomIndex{FMath::RandRange(0, AttackMoveInstances.Num() - 1)};
 	
 	if (AttackMoveInstances.IsValidIndex(RandomIndex))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%d"), RandomIndex);
+		if (AttackMoveInstances[RandomIndex] == nullptr)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Attack Move Instance is null"));
+			return;
+		}
 		AttackMoveInstances[RandomIndex]->Execute(OwnerCharacter, AnimDuration);
 	}
 }

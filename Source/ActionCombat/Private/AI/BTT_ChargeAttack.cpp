@@ -9,6 +9,7 @@
 #include "Characters/EEnemyState.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interfaces/Fighter.h"
 #include "Navigation/PathFollowingComponent.h"
 
 UBTT_ChargeAttack::UBTT_ChargeAttack()
@@ -24,10 +25,21 @@ EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	CharacterPtr = AIControllerPtr->GetCharacter();
 
 	BossAnimInstancePtr = Cast<UBossAnimInstance>(CharacterPtr->GetMesh()->GetAnimInstance());
+	
+	// Use Animation Blueprint to do the charging animation (type 1)
+	// BossAnimInstancePtr->bIsCharging = true;
 
-	BossAnimInstancePtr->bIsCharging = true;
-
-
+	// Use Animation Montage to do the charging animation (type 2)
+	IFighter* FighterInterfacePtr{Cast<IFighter>(CharacterPtr)};
+	if (FighterInterfacePtr)
+	{
+		FighterInterfacePtr->ChargeAttack();
+		float AnimDuration{FighterInterfacePtr->GetAnimDuration()};
+		FTimerHandle AttackTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UBTT_ChargeAttack::FinishAttackTask, AnimDuration,
+		                                       false);
+	}
+	
 	// Set the IsReadyToCharge key to false first, because there are some animations that need to be played before the charge
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsReadyToCharge"), false);
 
