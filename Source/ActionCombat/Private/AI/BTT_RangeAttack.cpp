@@ -31,8 +31,6 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		AbortTask(OwnerComp, NodeMemory);
 		return EBTNodeResult::Aborted;
 	}
-	
-	FighterInterfacePtr->RangedAttack();
 
 	// Generate a random number between 0 and 1
 	const float RandomValue{FMath::FRand()};
@@ -47,6 +45,7 @@ EBTNodeResult::Type UBTT_RangeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	}
 	else
 	{
+		FighterInterfacePtr->RangedAttack();
 		// Decrease the threshold
 		CurrentChargeAttackTransitionThreshold -= 0.1f;
 	}

@@ -14,28 +14,29 @@ void UCharge_FromSky::Setup(ACharacter* AttackingCharacter)
 	RiseSpeed = RiseHeight / RiseDuration;
 	FallDuration = FallAndAttack_Montage->GetPlayLength();
 
-	this->Attacker = AttackingCharacter;
+	Attacker = AttackingCharacter;
 }
 
-void UCharge_FromSky::Execute(ACharacter* Character, float& Duration)
+float UCharge_FromSky::Execute()
 {
-	Duration = RiseDuration + FallDuration + 0.5;  // 2 for some extra time
 	// First, pause the control from AI
-	AAIController* AIController{Cast<AAIController>(Character->GetController())};
+	AAIController* AIController{Cast<AAIController>(Attacker->GetController())};
 	if (AIController)
 	{
 		AIController->StopMovement();
 		AIController->BrainComponent->PauseLogic("Temporarily stopped, charging from the sky");
 	}
-	Character->GetCharacterMovement()->DisableMovement();
+	Attacker->GetCharacterMovement()->DisableMovement();
 
 	// Rise to the sky while playing the RiseToSky_Montage animation
 
-	LocationAfterRise = Character->GetActorLocation();
+	LocationAfterRise = Attacker->GetActorLocation();
 	LocationAfterRise.Z += RiseHeight;
 	
-	Character->PlayAnimMontage(RiseToSky_Montage);
+	Attacker->PlayAnimMontage(RiseToSky_Montage);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCharge_FromSky::CharacterRise, TimeInterval, true);
+
+	return RiseDuration + FallDuration + 0.5;  // 0.5 for some extra time
 }
 
 void UCharge_FromSky::CharacterRise()
@@ -44,6 +45,7 @@ void UCharge_FromSky::CharacterRise()
 	FVector CurrenLocation{Attacker->GetActorLocation()};
 	if (CurrenLocation.Equals(LocationAfterRise, 10.0f))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Reached the top"));
 		Attacker->SetActorLocation(LocationAfterRise);
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 		LandingLocation = GetWorld()->GetFirstPlayerController()->GetCharacter()->GetActorLocation();  // Get the player's location
@@ -61,6 +63,7 @@ void UCharge_FromSky::CharacterFall()
 	FVector CurrenLocation{Attacker->GetActorLocation()};
 	if (CurrenLocation.Equals(LandingLocation, 10.0f))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Reached the ground"));
 		Attacker->SetActorLocation(LandingLocation);
 		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
 		RestartAI();

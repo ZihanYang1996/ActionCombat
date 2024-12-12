@@ -120,12 +120,18 @@ void UCombatComponent::ExecuteRandomAttack(const TArray<UAttackMove*>& AttackMov
 	
 	if (AttackMoveInstances.IsValidIndex(RandomIndex))
 	{
-		if (AttackMoveInstances[RandomIndex] == nullptr)
+		if (!IsValid(AttackMoveInstances[RandomIndex]))
 		{
 			UE_LOG(LogTemp, Error, TEXT("Attack Move Instance is null"));
 			return;
 		}
-		AttackMoveInstances[RandomIndex]->Execute(OwnerCharacter, AnimDuration);
+		if (!IsValid(OwnerCharacter))
+		{
+			UE_LOG(LogTemp, Error, TEXT("OwnerCharacter is null"));
+			return;
+		}
+		UE_LOG(LogTemp, Warning, TEXT("%f"), AnimDuration);
+		AnimDuration = AttackMoveInstances[RandomIndex]->Execute();
 	}
 }
 

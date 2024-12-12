@@ -20,17 +20,20 @@ class ACTIONCOMBAT_API UCombatComponent : public UActorComponent
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UAttackMove>> MeleeAttackMoves;
-	
+
+	UPROPERTY()  // To avoid accidental garbage collection
 	TArray<UAttackMove*> MeleeAttackMoveInstances{};
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UAttackMove>> RangedAttackMoves;
-	
+
+	UPROPERTY()  // To avoid accidental garbage collection
 	TArray<UAttackMove*> RangedAttackMoveInstances{};
 
 	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<UAttackMove>> ChargeAttackMoves;
-	
+
+	UPROPERTY()  // To avoid accidental garbage collection
 	TArray<UAttackMove*> ChargeAttackMoveInstances{};
 
 	ACharacter* OwnerCharacter;

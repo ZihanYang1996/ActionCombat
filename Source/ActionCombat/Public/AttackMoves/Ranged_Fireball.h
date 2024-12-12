@@ -17,8 +17,10 @@ class ACTIONCOMBAT_API URanged_Fireball : public UAttackMove
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* RangedAttack;
 
+	ACharacter* Attacker;
+
 public:
-	virtual void Execute(class ACharacter* Character, float& Duration) override;
+	virtual float Execute() override;
 
 	virtual void Setup(ACharacter* AttackingCharacter) override;
 };

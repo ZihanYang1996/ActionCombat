@@ -48,6 +48,6 @@ class ACTIONCOMBAT_API UCharge_FromSky : public UAttackMove
 
 public:
 	virtual void Setup(ACharacter* AttackingCharacter) override;
-	virtual void Execute(ACharacter* Character, float& Duration) override;
+	virtual float Execute() override;
 	
 };

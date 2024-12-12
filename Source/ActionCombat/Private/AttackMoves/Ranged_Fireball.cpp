@@ -7,11 +7,12 @@
 
 void URanged_Fireball::Setup(ACharacter* AttackingCharacter)
 {
-	
+	Attacker = AttackingCharacter;
 }
 
-void URanged_Fireball::Execute(ACharacter* Character, float& Duration)
+float URanged_Fireball::Execute()
 {
-	Character->PlayAnimMontage(RangedAttack);	
+	return Attacker->PlayAnimMontage(RangedAttack);
+	
 }
 
