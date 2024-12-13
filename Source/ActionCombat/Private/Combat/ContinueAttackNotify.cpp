@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Animations/ContinueAttackNotify.h"
+#include "Combat/ContinueAttackNotify.h"
 
 #include "GameFramework/Character.h"
 

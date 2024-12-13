@@ -3,7 +3,7 @@
 
 #include "AttackMoves/Ranged_Fireball.h"
 
-#include "Animations/ContinueAttackNotify.h"
+#include "Combat/ContinueAttackNotify.h"
 #include "GameFramework/Character.h"
 
 void URanged_Fireball::Setup(ACharacter* AttackingCharacter)

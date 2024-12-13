@@ -3,7 +3,7 @@
 
 #include "AttackMoves/Melee_LR.h"
 
-#include "Animations/ContinueAttackNotify.h"
+#include "Combat/ContinueAttackNotify.h"
 #include "GameFramework/Character.h"
 
 float UMelee_LR::Execute()
