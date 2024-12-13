@@ -15,9 +15,14 @@ class ACTIONCOMBAT_API URanged_Fireball : public UAttackMove
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
+	UAnimMontage* PreAttack;
+	
+	UPROPERTY(EditAnywhere)
 	UAnimMontage* RangedAttack;
 
 	ACharacter* Attacker;
+
+	float TotalDuration;
 
 public:
 	virtual float Execute() override;
