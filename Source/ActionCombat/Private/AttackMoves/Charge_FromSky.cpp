@@ -41,7 +41,7 @@ float UCharge_FromSky::Execute()
 
 void UCharge_FromSky::CharacterRise()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Rising"));
+	// UE_LOG(LogTemp, Warning, TEXT("Rising"));
 	FVector CurrenLocation{Attacker->GetActorLocation()};
 	if (CurrenLocation.Equals(LocationAfterRise, 10.0f))
 	{
@@ -59,7 +59,7 @@ void UCharge_FromSky::CharacterRise()
 
 void UCharge_FromSky::CharacterFall()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Falling"));
+	// UE_LOG(LogTemp, Warning, TEXT("Falling"));
 	FVector CurrenLocation{Attacker->GetActorLocation()};
 	if (CurrenLocation.Equals(LandingLocation, 10.0f))
 	{
@@ -76,7 +76,7 @@ void UCharge_FromSky::CharacterFall()
 
 void UCharge_FromSky::RestartAI()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Restarting AI"));
+	// UE_LOG(LogTemp, Warning, TEXT("Restarting AI"));
 	AAIController* AIController{Cast<AAIController>(Attacker->GetController())};
 	if (AIController)
 	{
