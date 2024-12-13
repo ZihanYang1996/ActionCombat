@@ -22,7 +22,8 @@ void UMelee_LR::Setup(ACharacter* AttackingCharacter)
 		{
 			Notify->SetNetMontage(Attack);
 		}
+		TotalDuration = NotifyEvent.GetTriggerTime();  // Get the time length before the attack is triggered
 	}
 
-	TotalDuration = PreAttack->GetPlayLength() + Attack->GetPlayLength();
+	TotalDuration += Attack->GetPlayLength();
 }
