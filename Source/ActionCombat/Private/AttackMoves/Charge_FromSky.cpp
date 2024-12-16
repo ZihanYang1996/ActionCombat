@@ -5,11 +5,23 @@
 
 #include "AIController.h"
 #include "BrainComponent.h"
+#include "Combat/ContinueAttackNotify.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 void UCharge_FromSky::Setup(ACharacter* AttackingCharacter)
 {
+	// Set up the ContinuousAttackNotify from the PreAttack_Montage
+	const TArray<FAnimNotifyEvent>& NotifyEvents{PreAttack_Montage->Notifies};
+	for (const FAnimNotifyEvent& NotifyEvent : NotifyEvents)
+	{
+		if (UContinueAttackNotify* Notify{Cast<UContinueAttackNotify>(NotifyEvent.Notify)})
+		{
+			Notify->SetNetMontage(RiseToSky_Montage);
+			PreAttackDuration = NotifyEvent.GetTriggerTime();
+		}
+	}
+	
 	RiseDuration = RiseToSky_Montage->GetPlayLength();
 	RiseSpeed = RiseHeight / RiseDuration;
 	FallDuration = FallAndAttack_Montage->GetPlayLength();
@@ -33,10 +45,10 @@ float UCharge_FromSky::Execute()
 	LocationAfterRise = Attacker->GetActorLocation();
 	LocationAfterRise.Z += RiseHeight;
 	
-	Attacker->PlayAnimMontage(RiseToSky_Montage);
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCharge_FromSky::CharacterRise, TimeInterval, true);
+	Attacker->PlayAnimMontage(PreAttack_Montage);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UCharge_FromSky::CharacterRise, TimeInterval, true, PreAttackDuration);
 
-	return RiseDuration + FallDuration + 0.5;  // 0.5 for some extra time
+	return PreAttackDuration + RiseDuration + FallDuration + 0.5;  // 0.5 for some extra time
 }
 
 void UCharge_FromSky::CharacterRise()

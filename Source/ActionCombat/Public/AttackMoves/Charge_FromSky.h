@@ -15,6 +15,11 @@ class ACTIONCOMBAT_API UCharge_FromSky : public UAttackMove
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
+	UAnimMontage* PreAttack_Montage;
+
+	float PreAttackDuration{};
+
+	UPROPERTY(EditAnywhere)
 	UAnimMontage* RiseToSky_Montage;
 
 	float RiseDuration{};
