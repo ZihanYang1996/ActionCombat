@@ -16,8 +16,8 @@ void URanged_Fireball::Setup(ACharacter* AttackingCharacter)
 		if (UContinueAttackNotify* Notify{Cast<UContinueAttackNotify>(NotifyEvent.Notify)})
 		{
 			Notify->SetNetMontage(RangedAttack);
+			TotalDuration = NotifyEvent.GetTriggerTime();  // Get the time length before the attack is triggered
 		}
-		TotalDuration = NotifyEvent.GetTriggerTime();  // Get the time length before the attack is triggered
 	}
 
 	TotalDuration += RangedAttack->GetPlayLength();
