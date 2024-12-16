@@ -25,21 +25,28 @@ EBTNodeResult::Type UBTT_ChargeAttack::ExecuteTask(UBehaviorTreeComponent& Owner
 	CharacterPtr = AIControllerPtr->GetCharacter();
 
 	BossAnimInstancePtr = Cast<UBossAnimInstance>(CharacterPtr->GetMesh()->GetAnimInstance());
-	
-	// Use Animation Blueprint to do the charging animation (type 1)
-	// BossAnimInstancePtr->bIsCharging = true;
 
-	// Use Animation Montage to do the charging animation (type 2)
-	IFighter* FighterInterfacePtr{Cast<IFighter>(CharacterPtr)};
-	if (FighterInterfacePtr)
+	float RandomValue{FMath::FRand()};
+	if (RandomValue <= ChargeType1Probability)
 	{
-		FighterInterfacePtr->ChargeAttack();
-		float AnimDuration{FighterInterfacePtr->GetAnimDuration()};
-		FTimerHandle AttackTimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UBTT_ChargeAttack::FinishAttackTask, AnimDuration,
-		                                       false);
+		// Use Animation Blueprint to do the charging animation (type 1)
+		BossAnimInstancePtr->bIsCharging = true;
 	}
-	
+	else
+	{
+		// Use Animation Montage to do the charging animation (type 2)
+		IFighter* FighterInterfacePtr{Cast<IFighter>(CharacterPtr)};
+		if (FighterInterfacePtr)
+		{
+			FighterInterfacePtr->ChargeAttack();
+			float AnimDuration{FighterInterfacePtr->GetAnimDuration()};
+			FTimerHandle AttackTimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UBTT_ChargeAttack::FinishAttackTask,
+			                                       AnimDuration,
+			                                       false);
+		}
+	}
+
 	// Set the IsReadyToCharge key to false first, because there are some animations that need to be played before the charge
 	OwnerComp.GetBlackboardComponent()->SetValueAsBool(TEXT("IsReadyToCharge"), false);
 

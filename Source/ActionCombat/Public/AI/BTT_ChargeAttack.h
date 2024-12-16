@@ -31,6 +31,9 @@ class ACTIONCOMBAT_API UBTT_ChargeAttack : public UBTTaskNode
 	UPROPERTY(EditAnywhere)
 	float AcceptanceRadius{100.0f};
 
+	UPROPERTY(EditAnywhere)
+	float ChargeType1Probability{0.5f};
+
 	void FinishAttackTask();
 	
 	UFUNCTION()
