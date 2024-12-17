@@ -31,8 +31,13 @@ class ACTIONCOMBAT_API UBTT_MeleeAttack : public UBTTaskNode
 
 	void FinishAttackTask();
 
+	AAIController* AIController;
+
 public:
 	UBTT_MeleeAttack();
+
+	UFUNCTION()
+	void MoveTowardsPlayer();
 
 	UFUNCTION()
 	void HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);

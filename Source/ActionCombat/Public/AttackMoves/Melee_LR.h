@@ -19,9 +19,7 @@ class ACTIONCOMBAT_API UMelee_LR : public UAttackMove
 	
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* Attack;
-
-	float TotalDuration;
-
+	
 	ACharacter* Attacker;
 
 public:

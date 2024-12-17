@@ -17,46 +17,58 @@ UBTT_MeleeAttack::UBTT_MeleeAttack()
 	bNotifyTick = true;
 }
 
+void UBTT_MeleeAttack::MoveTowardsPlayer()
+{
+	ACharacter* TargetCharacter{GetWorld()->GetFirstPlayerController()->GetCharacter()};
+	if (!IsValid(TargetCharacter))
+	{
+		UE_LOG(LogTemp, Error, TEXT("TargetCharacter is nullptr!"));
+		return;
+	}
+	FAIMoveRequest MoveRequest{TargetCharacter};
+	MoveRequest.SetUsePathfinding(true);
+	MoveRequest.SetAcceptanceRadius(MoveAcceptanceRadius);
+
+	AIController->MoveTo(MoveRequest);
+	AIController->SetFocus(TargetCharacter);
+
+	AIController->ReceiveMoveCompleted.AddUniqueDynamic(this, &UBTT_MeleeAttack::HandleMoveCompleted);
+	UE_LOG(LogTemp, Warning, TEXT("Moving to player"));
+}
+
 EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
 	bIsFinished = false;
+	AIController = OwnerComp.GetAIOwner();
 	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
+	OwnerComp.GetBlackboardComponent()->SetValueAsFloat(TEXT("MeleeAttackRadius"), AttackRadius);
 
+	
+	IFighter* FighterInterfacePtr{Cast<IFighter>(AIController->GetCharacter())};
+	if (!FighterInterfacePtr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("The AI character does not implement the IFighter interface!"));
+		return EBTNodeResult::Failed;
+	}
+	
 	if (DistanceToPlayer > AttackRadius)
 	{
-		ACharacter* TargetCharacter{GetWorld()->GetFirstPlayerController()->GetCharacter()};
-		if (!IsValid(TargetCharacter))
-		{
-			UE_LOG(LogTemp, Error, TEXT("TargetCharacter is nullptr!"));
-			return EBTNodeResult::Failed;
-		}
-		FAIMoveRequest MoveRequest{TargetCharacter};
-		MoveRequest.SetUsePathfinding(true);
-		MoveRequest.SetAcceptanceRadius(MoveAcceptanceRadius);
+		// First play the pre-attack animation
+		FighterInterfacePtr->MeleeAttack();
+		float PreAttackAnimDuration{FighterInterfacePtr->GetAnimDuration()};
+		FTimerHandle PreAttackTimerHandle;
 
-		OwnerComp.GetAIOwner()->MoveTo(MoveRequest);
-		OwnerComp.GetAIOwner()->SetFocus(TargetCharacter);
-
-		OwnerComp.GetAIOwner()->ReceiveMoveCompleted.AddUniqueDynamic(this, &UBTT_MeleeAttack::HandleMoveCompleted);
-		UE_LOG(LogTemp, Warning, TEXT("Moving to player"));
+		// Move towards the player after the pre-attack animation
+		GetWorld()->GetTimerManager().SetTimer(PreAttackTimerHandle, this, &UBTT_MeleeAttack::MoveTowardsPlayer, PreAttackAnimDuration,
+		                                       false);
 		return EBTNodeResult::InProgress;
 	}
 	else if (DistanceToPlayer != 0.0f) // If the player is within the attack radius (DistanceToPlayer should never be 0)
 	{
-		IFighter* FighterInterfacePtr{Cast<IFighter>(OwnerComp.GetAIOwner()->GetCharacter())};
-		if (FighterInterfacePtr)
-		{
-			FighterInterfacePtr->MeleeAttack();
-			float AnimDuration{FighterInterfacePtr->GetAnimDuration()};
-			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_MeleeAttack::FinishAttackTask, AnimDuration,
-			                                       false);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("The AI character does not implement the IFighter interface!"));
-		}
-
-
+		FighterInterfacePtr->MeleeAttack();
+		float AttackAnimDuration{FighterInterfacePtr->GetAnimDuration()};
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UBTT_MeleeAttack::FinishAttackTask, AttackAnimDuration,
+												   false);
 		return EBTNodeResult::InProgress;
 	}
 
@@ -67,7 +79,6 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 void UBTT_MeleeAttack::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	float DistanceToPlayer{OwnerComp.GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
-	AAIController* AIController{OwnerComp.GetAIOwner()};
 	IFighter* FighterInterfacePtr{Cast<IFighter>(AIController->GetCharacter())};
 	if (DistanceToPlayer > FighterInterfacePtr->GetMeleeRange())
 	{
