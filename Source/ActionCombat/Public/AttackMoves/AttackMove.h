@@ -21,5 +21,9 @@ public:
 	{
 	};
 
+	virtual void FinishAttackTask()
+	{
+	};
+	
 	virtual ~UAttackMove();
 };
