@@ -51,6 +51,7 @@ public:
 	virtual float Execute() override;
 
 	virtual void Setup(ACharacter* AttackingCharacter) override;
+	void PerformAttack();
 
 	UFUNCTION()
 	void HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
