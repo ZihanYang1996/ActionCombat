@@ -31,25 +31,45 @@ float UMelee_LR::Execute()
 	float DistanceToPlayer{AIController->GetBlackboardComponent()->GetValueAsFloat(TEXT("DistanceToPlayer"))};
 	if (DistanceToPlayer > AttackRadius)
 	{
-		PreAttackAnimDuration = Attacker->PlayAnimMontage(PreAttack);
-		UE_LOG(LogTemp, Warning, TEXT("Distance to player is greater than attack radius"));
-		FTimerHandle PreAttackTimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(PreAttackTimerHandle, this, &UMelee_LR::MoveTowardsPlayer,
-		                                       PreAttackAnimDuration,
-		                                       false);
-		return PreAttackAnimDuration;
+		// Play the pre-attack animation with a probability of CurrentPreAttackProbability
+		float RandomVlaue{FMath::FRand()};
+		if (RandomVlaue < CurrentPreAttackProbability)
+		{
+			PreAttackAnimDuration = Attacker->PlayAnimMontage(PreAttack);
+			FTimerHandle PreAttackTimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(PreAttackTimerHandle, this, &UMelee_LR::MoveTowardsPlayer,
+												   PreAttackAnimDuration,
+												   false);
+			// Set the CurrentPreAttackProbability to 0, so the pre-attack animation is never played twice
+			CurrentPreAttackProbability = 0;
+		}
+		else
+		{
+			PreAttackAnimDuration = 0.0f;
+			MoveTowardsPlayer();
+		}
+		return 1.0f;
 	}
 	else if (DistanceToPlayer != 0.0f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Distance to player is less than attack radius"));
-		UE_LOG(LogTemp, Warning, TEXT("Directly playing the attack animation"));
-		AttackAnimDuration = Attacker->PlayAnimMontage(Attack);
-		FTimerHandle AttackTimerHandle;
-		// GetWorld()->GetTimerManager().ClearTimer(AttackTimerHandle);
-		GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UMelee_LR::FinishAttackTask,
-		                                       AttackAnimDuration,
-		                                       false);
-		return AttackAnimDuration;
+		// Play the pre-attack animation with a probability of CurrentPreAttackProbability
+		float RandomVlaue{FMath::FRand()};
+		if (RandomVlaue < CurrentPreAttackProbability)
+		{
+			PreAttackAnimDuration = Attacker->PlayAnimMontage(PreAttack);
+			FTimerHandle PreAttackTimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(PreAttackTimerHandle, this, &UMelee_LR::PerformAttack,
+												   PreAttackAnimDuration,
+												   false);
+			// Set the CurrentPreAttackProbability to 0, so the pre-attack animation is never played twice
+			CurrentPreAttackProbability = 0;
+		}
+		else
+		{
+			PreAttackAnimDuration = 0.0f;
+			PerformAttack();
+		}
+		return 1.0f;
 	}
 	else
 	{
@@ -62,15 +82,17 @@ void UMelee_LR::Setup(ACharacter* AttackingCharacter)
 {
 	Attacker = AttackingCharacter;
 	AIController = Attacker->GetController<AAIController>();
+	CurrentPreAttackProbability = PreAttackProbability;
 }
 
 void UMelee_LR::PerformAttack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move Completed, playing the attack animation"));
 	AttackAnimDuration = Attacker->PlayAnimMontage(Attack);
 	FTimerHandle AttackTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(AttackTimerHandle, this, &UMelee_LR::FinishAttackTask,
 											AttackAnimDuration, false);
+	// Reset the CurrentPreAttackProbability to the original value
+	CurrentPreAttackProbability = PreAttackProbability;
 }
 
 void UMelee_LR::HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result)
@@ -80,7 +102,6 @@ void UMelee_LR::HandleMoveCompleted(FAIRequestID RequestID, EPathFollowingResult
 
 void UMelee_LR::MoveTowardsPlayer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Starting to move towards player"));
 	ACharacter* TargetCharacter{GetWorld()->GetFirstPlayerController()->GetCharacter()};
 	if (!IsValid(TargetCharacter))
 	{

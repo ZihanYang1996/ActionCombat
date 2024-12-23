@@ -41,6 +41,11 @@ class ACTIONCOMBAT_API UMelee_Double : public UAttackMove
 
 	virtual void FinishAttackTask() override;
 
+	UPROPERTY(EditAnywhere)
+	float PreAttackProbability{0.3f};
+	
+	float CurrentPreAttackProbability{};
+
 public:
 	virtual float Execute() override;
 
