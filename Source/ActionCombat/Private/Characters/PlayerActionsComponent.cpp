@@ -83,12 +83,28 @@ void UPlayerActionsComponent::Roll()
 
 	OnRollDelegate.Broadcast(RollStaminaCost);
 
+	FVector Direction{};
 	// Calculate the direction of the roll
-	FVector Direction{
-		OwnerCharacter->GetCharacterMovement()->Velocity.Length() > 1.0f
-			? OwnerCharacter->GetCharacterMovement()->Velocity.GetSafeNormal()
-			: OwnerCharacter->GetActorForwardVector()  // Kind of like monster hunter, you have to face the direction you want to roll
-	};
+	if (OwnerCharacter->GetCharacterMovement()->Velocity.Length() > 1.0f)
+	{
+		// If the character is moving, roll in the direction of the movement
+		Direction = OwnerCharacter->GetCharacterMovement()->Velocity.GetSafeNormal();
+	}
+	else if (OwnerCharacter->GetMovementComponent()->GetLastInputVector().Length() > 0.0f)
+	{
+		// If the character is not moving, but the player is pressing a direction, roll in the direction of the input
+		Direction = OwnerCharacter->GetMovementComponent()->GetLastInputVector().GetSafeNormal();
+	}
+	else
+	{
+		// If the character is not moving and the player is not pressing a direction, roll in the direction the character is facing
+		Direction = OwnerCharacter->GetActorForwardVector();
+	}
+	// FVector Direction{
+	// 	OwnerCharacter->GetCharacterMovement()->Velocity.Length() > 1.0f
+	// 		? OwnerCharacter->GetCharacterMovement()->Velocity.GetSafeNormal()
+	// 		: OwnerCharacter->GetActorForwardVector()  // Kind of like monster hunter, you have to face the direction you want to roll
+	// };
 
 	FRotator NewRotation{Direction.Rotation()};
 
