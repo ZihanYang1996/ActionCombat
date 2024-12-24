@@ -101,6 +101,7 @@ void UCombatComponent::EnableComboContinuation()
 {
 	// Allow the player to continue the combo
 	bIsAttacking = false;
+	bCanTakeInput = true;  // Allow the player to take input (roll, for example)
 	bCanContinueCombo = true;
 }
 
