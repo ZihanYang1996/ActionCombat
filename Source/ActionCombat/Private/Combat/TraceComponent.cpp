@@ -96,7 +96,55 @@ void UTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 			             false,
 			             1.0f);
 		}
+
+		// Do an extra trace between the previous and current end socket
+		if (PreviousEndSocketLocations.Contains(TraceSockets.EndSocket))
+		{
+			TArray<FHitResult> OutResultsExtra;
+			
+			FVector PreviousEndSocketLocation{PreviousEndSocketLocations[TraceSockets.EndSocket]};
+			
+			FVector TraceCenter{(PreviousEndSocketLocation + EndSocketLocation) / 2.0f};
+			
+			double TraceLength{FVector::Distance(PreviousEndSocketLocation, EndSocketLocation)};
+			FVector BoxHalfExtentExtra{TraceLength, BoxCollisionEdgeLength, BoxCollisionEdgeLength};
+			BoxHalfExtentExtra /= 2.0f;
+			FCollisionShape BoxExtra{FCollisionShape::MakeBox(BoxHalfExtentExtra)};
+			
+			FVector Direction{EndSocketLocation - PreviousEndSocketLocation};
+			FRotator Rotation{Direction.Rotation()};
+			FQuat ShapeRotationExtra{Rotation};
+			
+			bool bHasFoundTargetsExtra{
+				GetWorld()->SweepMultiByChannel(
+					OutResultsExtra,
+					TraceCenter,
+					TraceCenter,
+					ShapeRotationExtra,
+					ECollisionChannel::ECC_GameTraceChannel1,
+					BoxExtra,
+					CollisionParams
+					)
+			};
+
+			AllOutResults.Append(OutResultsExtra);
+			
+			if (bIsInDebugMode)
+			{
+				DrawDebugBox(GetWorld(),
+							 TraceCenter,
+							 BoxExtra.GetExtent(),
+							 ShapeRotationExtra,
+							 bHasFoundTargetsExtra ? FColor::Green : FColor::Red,
+							 false,
+							 1.0f);
+			}
+			
+		}
+		
+		PreviousEndSocketLocations.Add(TraceSockets.EndSocket, EndSocketLocation);
 	}
+	
 
 
 	// Check if we have found any targets

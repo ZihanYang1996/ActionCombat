@@ -36,6 +36,8 @@ class ACTIONCOMBAT_API UTraceComponent : public UActorComponent
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* HitParticleTemplate;
 
+	TMap<FName, FVector> PreviousEndSocketLocations;  // Used to do tracing between the previous and current end socket
+	
 public:
 	// Sets default values for this component's properties
 	UTraceComponent();
